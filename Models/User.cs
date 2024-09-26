@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Ristorante360.Models;
+namespace Ristorante360Admin.Models;
 
 public partial class User
 {

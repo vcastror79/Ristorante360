@@ -5,14 +5,15 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
-using Ristorante360.Models;
+using Ristorante360Admin.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Text;
 using iTextSharp.tool.xml;
 using System.IO.Pipelines;
 using Rectangle = iTextSharp.text.Rectangle;
 
-namespace Ristorante360_Admin.Controllers
+
+namespace Ristorante_360_Admin.Controllers
 {
     public class PDFController : Controller
     {
@@ -28,8 +29,6 @@ namespace Ristorante360_Admin.Controllers
         public IActionResult GeneratePDF()
 
         {
-
-
 
             // Obtener datos de inventario desde la base de datos
              List<Inventory> tuListaDeInventario = ObtenerDatosDeInventario();
@@ -92,13 +91,6 @@ namespace Ristorante360_Admin.Controllers
             doc.Add(space);
 
             // Continuar con el código para agregar la tabla y el resto del contenido
-
-
-
-
-
-
-
 
 
             // Agregar tabla al PDF

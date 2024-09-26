@@ -1,43 +1,43 @@
-﻿using ElChanteAdmin.Models;
+﻿using Ristorante360Admin.Models;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
-namespace ElChanteAdmin.Services.Implementation
+namespace Ristorante360Admin.Services.Implementation
 {
     public class ProcedureExecutor
     {
-        private readonly ElChanteContext _elChanteContext;
+        private readonly RistoranteContext _ristoranteContext;
 
-        public ProcedureExecutor(ElChanteContext elChanteContext)
+        public ProcedureExecutor(RistoranteContext ristoranteContext)
         {
-            _elChanteContext = elChanteContext;
+            _ristoranteContext = ristoranteContext;
         }
 
         public void ExecuteCheckInventoryStatus()
         {
-            _elChanteContext.Database.ExecuteSqlRaw("EXEC CheckInventoryStatus");
+            _ristoranteContext.Database.ExecuteSqlRaw("EXEC CheckInventoryStatus");
         }
 
         public void ExecuteCreateNotificationForAgotado(DateTime createDate)
         {
-            _elChanteContext.Database.ExecuteSqlRaw("EXEC CreateNotificationForAgotado @createDate",
+            _ristoranteContext.Database.ExecuteSqlRaw("EXEC CreateNotificationForAgotado @createDate",
                 new SqlParameter("@createDate", createDate));
         }
 
         public void ExecuteDescontarInsumos(int orderId)
         {
-            _elChanteContext.Database.ExecuteSqlRaw("EXEC DescontarInsumos @OrderId",
+            _ristoranteContext.Database.ExecuteSqlRaw("EXEC DescontarInsumos @OrderId",
                 new SqlParameter("@OrderId", orderId));
         }
 
         public void ExecuteUpdateProductAvailability()
         {
-            _elChanteContext.Database.ExecuteSqlRaw("EXEC UpdateProductAvailability");
+            _ristoranteContext.Database.ExecuteSqlRaw("EXEC UpdateProductAvailability");
         }
 
         public void ExecuteUpdateOrderTotalAmount(int orderId)
         {
-            _elChanteContext.Database.ExecuteSqlRaw("EXEC UpdateOrderTotalAmount @orderId",
+            _ristoranteContext.Database.ExecuteSqlRaw("EXEC UpdateOrderTotalAmount @orderId",
                 new SqlParameter("@orderId", orderId));
         }
 

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Ristorante360.Models;
+namespace Ristorante360Admin.Models;
 
 public partial class Product
 {

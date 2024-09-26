@@ -1,10 +1,10 @@
-﻿using Ristorante360.Models;
-using Ristorante360.Services.Contract;
+﻿using Ristorante360Admin.Models;
+using Ristorante360Admin.Services.Contract;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 
-namespace Ristorante360.Controllers
+namespace Ristorante360Admin.Controllers
 {
     public class NotificationViewComponent : ViewComponent
     {

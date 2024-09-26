@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Ristorante360Context.Models;
+using Ristorante360Admin.Models;
 
-namespace Ristorante360Context.Services.Contract
+namespace Ristorante360Admin.Services.Contract
 {
     public interface IUserService
     {

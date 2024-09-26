@@ -1,14 +1,15 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using ElChanteAdmin.Models;
-using ElChanteAdmin.Services.Contract;
+using Ristorante360Admin.Models;
+using Ristorante360Admin.Services.Contract;
 
-namespace ElChanteAdmin.Services.Implementation
+
+namespace Ristorante360Admin.Services.Implementation
 {
     public class UserService : IUserService
     {
-        private readonly ElChanteContext _dbcontext;
+        private readonly RistoranteContext _dbcontext;
 
-        public UserService(ElChanteContext dbContext)
+        public UserService(RistoranteContext dbContext)
         {
             _dbcontext = dbContext;
         }

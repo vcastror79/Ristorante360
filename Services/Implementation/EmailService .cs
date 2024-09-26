@@ -1,18 +1,18 @@
-﻿using ElChanteAdmin.Models;
-using ElChanteAdmin.Services.Contract;
+﻿using Ristorante360Admin.Models;
+using Ristorante360Admin.Services.Contract;
 using System.Net.Mail;
 
-namespace ElChanteAdmin.Services.Implementation
+namespace Ristorante360Admin.Services.Implementation
 {
     public class EmailService : IEmailService
     {
         private readonly IConfiguration _configuration;
-        private readonly ElChanteContext _elChanteContext;
+        private readonly RistoranteContext _ristoranteContext;
 
-        public EmailService(IConfiguration configuration, ElChanteContext elChanteContext)
+        public EmailService(IConfiguration configuration, RistoranteContext ristoranteContext)
         {
             _configuration = configuration;
-            _elChanteContext = elChanteContext;
+            _ristoranteContext = ristoranteContext;
         }
 
         public async Task SendEmailAsync(string emailDestino, string token)
@@ -25,7 +25,7 @@ namespace ElChanteAdmin.Services.Implementation
 
                 string url = urlDomain + "/User/Recovery/?token=" + token;
 
-                MailMessage oMailMessage = new MailMessage(EmailOrigen, emailDestino, "Recuperación de Contraseña - El Chante Admin",
+                MailMessage oMailMessage = new MailMessage(EmailOrigen, emailDestino, "Recuperación de Contraseña - El Ristorante 360 Admin",
                                 "<html>" +
                                 "<head>" +
                                 "<style>" +
@@ -41,13 +41,13 @@ namespace ElChanteAdmin.Services.Implementation
                                 "   <div class='message'>" +
                                 "       <h2>¡Recuperación de Contraseña!</h2>" +
                                 "       <p>Estimado Usuario,</p>" +
-                                "       <p>Recibimos una solicitud para restablecer tu contraseña en El Chante Admin.</p>" +
+                                "       <p>Recibimos una solicitud para restablecer tu contraseña en Ristorante 360.</p>" +
                                 "       <p>Haz clic en el siguiente botón para restablecer tu contraseña:</p>" +
                                 "       <div class='button'>" +
                                 "           <a href='" + url + "' style='background-color: #007BFF; color: #fff; padding: 10px 20px; text-decoration: none; border-radius: 5px;'>Recuperar Contraseña</a>" +
                                 "       </div>" +
                                 "       <p>Si no realizaste esta solicitud, puedes ignorar este correo electrónico.</p>" +
-                                "       <p>Atentamente,<br>El Equipo de El Chante</p>" +
+                                "       <p>Atentamente,<br>El Equipo de Ristorante 360 </p>" +
                                 "   </div>" +
                                 "</div>" +
                                 "</body>" +
@@ -78,8 +78,8 @@ namespace ElChanteAdmin.Services.Implementation
                 DateTime = DateTime.Now
             };
 
-            _elChanteContext.Errors.Add(error);
-            await _elChanteContext.SaveChangesAsync();
+            _ristoranteContext.Errors.Add(error);
+            await _ristoranteContext.SaveChangesAsync();
         }
 
     }

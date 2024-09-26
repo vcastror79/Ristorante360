@@ -1,16 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-using System.Data;
-using Ristorante360.Models;
-
-
-using System;
+﻿using System;
 using System.Collections.Generic;
+using Ristorante360Admin.Models;
+using Microsoft.EntityFrameworkCore;
 
+//using static System.Runtime.InteropServices.JavaScript.JSType;
+//using System.Data;
 
-
-
-namespace Ristorante360.Models;
+namespace Ristorante360Admin.Models;
 
 public partial class RistoranteContext : DbContext
 {

@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Ristorante360.Models;
-using Ristorante360.Models.ViewModels;
+using Ristorante360Admin.Models;
+using Ristorante360Admin.Models.ViewModels;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Data.SqlClient;
-using Ristorante360.Services.Contract;
+using Ristorante360Admin.Services.Contract;
 using System.Security.Claims;
 using Ristorante360.Services.Implementation;
 
@@ -20,7 +20,7 @@ namespace PruebaElChante.Controllers
         private readonly IErrorLoggingService _errorLoggingService;
 
 
-        public VentasPedidosController(RistoranteContext elChanteContext, ILogService logService, ProcedureExecutor procedureExecutor, IErrorLoggingService errorLoggingService)
+        public VentasPedidosController(RistoranteContext ristoranteContext, ILogService logService, ProcedureExecutor procedureExecutor, IErrorLoggingService errorLoggingService)
         {
             _ristorante360Context = ristoranteContext;
             _logService = logService;
@@ -41,11 +41,11 @@ namespace PruebaElChante.Controllers
 
                 if (categoryId == 0)
                 {
-                    productos = _ristoranteContext.Products.Where(c => c.Availability == true).ToList();
+                    productos = _ristorante360Context.Products.Where(c => c.Availability == true).ToList();
                 }
                 else
                 {
-                    productos = _ristoranteContext.Products.Where(p => p.CategoryId == categoryId).ToList();
+                    productos = _ristorante360Context.Products.Where(p => p.CategoryId == categoryId).ToList();
                 }
 
                 return View(productos);

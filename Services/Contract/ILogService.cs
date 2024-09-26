@@ -1,8 +1,8 @@
-﻿using Ristorante360.Models;
-using Ristorante360.Models.ViewModels;
+﻿using Ristorante360Admin.Models;
+using Ristorante360Admin.Models.ViewModels;
 using Microsoft.EntityFrameworkCore;
 
-namespace Ristorante360.Services.Contract
+namespace Ristorante360Admin.Services.Contract
 {
     public interface ILogService
     {

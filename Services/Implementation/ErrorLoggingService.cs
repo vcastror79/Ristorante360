@@ -1,19 +1,19 @@
-﻿using ElChanteAdmin.Models;
-using ElChanteAdmin.Services.Contract;
+﻿using Ristorante360Admin.Models;
+using Ristorante360Admin.Services.Contract;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ElChanteAdmin.Services.Implementation
+namespace Ristorante360Admin.Services.Implementation
 {
     public class ErrorLoggingService : IErrorLoggingService
     {
-        private readonly ElChanteContext _elChanteContext;
+        private readonly RistoranteContext _ristoranteContext;
 
-        public ErrorLoggingService(ElChanteContext elChanteContext)
+        public ErrorLoggingService(RistoranteContext ristoranteContext)
         {
-            _elChanteContext = elChanteContext;
+            _ristoranteContext = ristoranteContext;
         }
 
         public void LogError(string errorMessage, string exceptionMessage)
@@ -26,8 +26,8 @@ namespace ElChanteAdmin.Services.Implementation
                 ExceptionMessage = exceptionMessage,
             };
 
-            _elChanteContext.Errors.Add(errorLog);
-            _elChanteContext.SaveChanges();
+            _ristoranteContext.Errors.Add(errorLog);
+            _ristoranteContext.SaveChanges();
         }
     }
 }

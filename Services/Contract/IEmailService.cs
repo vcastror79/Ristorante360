@@ -1,4 +1,4 @@
-﻿namespace Ristorante360.Services.Contract
+﻿namespace Ristorante360Admin.Services.Contract
 {
     public interface IEmailService
     {

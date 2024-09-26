@@ -1,4 +1,4 @@
-﻿namespace Ristorante360.Models
+﻿namespace Ristorante360Admin.Models
 {
     public class Notification
     {

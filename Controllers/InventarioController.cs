@@ -1,7 +1,7 @@
-﻿using Ristorante360.Models;
-using Ristorante360.Models.ViewModels;
-using Ristorante360.Services.Contract;
-using Ristorante360.Services.Implementation;
+﻿using Ristorante360Admin.Models;
+using Ristorante360Admin.Models.ViewModels;
+using Ristorante360Admin.Services.Contract;
+using Ristorante360Admin.Services.Implementation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -9,20 +9,20 @@ using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
-namespace Ristorante360.Controllers
+namespace Ristorante360Admin.Controllers
 {
     [Authorize]
 
     public class InventarioController : Controller
     {
-        private readonly RistoranteContext Ristorante360Context;
+        private readonly RistoranteContext _ristoranteContext;
         private readonly ProcedureExecutor _procedureExecutor;
         private readonly ILogService _logService;
         private readonly IErrorLoggingService _errorLoggingService;
 
-        public InventarioController(RistoranteContext ristorante360Context, ProcedureExecutor procedureExecutor, ILogService logService, IErrorLoggingService errorLoggingService)
+        public InventarioController(RistoranteContext ristoranteContext, ProcedureExecutor procedureExecutor, ILogService logService, IErrorLoggingService errorLoggingService)
         {
-            _ristoranteContext = ristorante360Context;
+            _ristoranteContext = ristoranteContext;
             _procedureExecutor = procedureExecutor;
             _logService = logService;
             _errorLoggingService = errorLoggingService;

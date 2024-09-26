@@ -1,16 +1,16 @@
-﻿using Ristorante360.Models;
+﻿using Ristorante360Admin.Models;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Ristorante360.Controllers
+namespace Ristorante360Admin.Controllers
 {
     public class CategoriaController : Controller
     {
         //Conexion DB
         private readonly RistoranteContext? _ristorante360Context;
 
-        public CategoriaController(RistoranteContext? Ristorante360Context)
+        public CategoriaController(RistoranteContext? ristorante360Context)
         {
-            _ristorante360Context = Ristorante360Context;
+            _ristorante360Context = ristorante360Context;
         }
 
         //Index Categoria

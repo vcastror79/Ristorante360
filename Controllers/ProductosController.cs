@@ -1,7 +1,7 @@
-﻿using Ristorante360.Models;
-using Ristorante360.Models.ViewModels;
-using Ristorante360.Services.Contract;
-using Ristorante360.Services.Implementation;
+﻿using Ristorante360Admin.Models;
+using Ristorante360Admin.Models.ViewModels;
+using Ristorante360Admin.Services.Contract;
+using Ristorante360Admin.Services.Implementation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -10,20 +10,20 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
-namespace Ristorante360.Controllers
+namespace Ristorante360Admin.Controllers
 {
     [Authorize]
     public class ProductosController : Controller
     {
 
-        private readonly RistoranteContext _ristorante360Context;
+        private readonly RistoranteContext _ristoranteContext;
         private readonly IWebHostEnvironment webHostEnvironment;
         private readonly ILogService _logService;
         private readonly IErrorLoggingService _errorLoggingService;
 
         public ProductosController(RistoranteContext ristorante360Context, IWebHostEnvironment hostEnvironment, ILogService logService, IErrorLoggingService errorLoggingService)
         {
-            _ristorante360Context = ristorante360Context;
+            _ristoranteContext = ristorante360Context;
             webHostEnvironment = hostEnvironment;
             _logService = logService;
             _errorLoggingService = errorLoggingService;
@@ -35,7 +35,7 @@ namespace Ristorante360.Controllers
             try
             {
                 // Recupera una lista de productos desde la base de datos, incluyendo la información de categoría para cada producto.
-                List<Product> listProduct = _ristorante360Context.Products.Include(c => c.oCategory).ToList();
+                List<Product> listProduct = _ristoranteContext.Products.Include(c => c.oCategory).ToList();
 
                 // Devuelve una vista llamada "ProductList" y pasa la lista de productos como modelo.
                 return View(listProduct);
@@ -64,7 +64,7 @@ namespace Ristorante360.Controllers
                 ProductVM oProductVM = new ProductVM()
                 {
                     oProduct = new Product(),
-                    oListCategory = _ristorante360Context.Categories.Select(Category => new SelectListItem()
+                    oListCategory = _ristoranteContext.Categories.Select(Category => new SelectListItem()
                     {
                         Text = Category.CategoryName,
                         Value = Category.CategoryId.ToString()
@@ -73,7 +73,7 @@ namespace Ristorante360.Controllers
 
                 if (productId != 0)
                 {
-                    oProductVM.oProduct = _ristorante360Context.Products.Find(productId);
+                    oProductVM.oProduct = _ristoranteContext.Products.Find(productId);
                 }
 
                 return View(oProductVM);
@@ -96,7 +96,7 @@ namespace Ristorante360.Controllers
             try
             {
                 bool isNewProduct = oProductVM.oProduct.ProductId == 0;
-                var product = isNewProduct ? new Product() : _ristorante360Context.Products.Find(oProductVM.oProduct.ProductId);
+                var product = isNewProduct ? new Product() : _ristoranteContext.Products.Find(oProductVM.oProduct.ProductId);
 
                 if (product == null && !isNewProduct)
                 {
@@ -127,10 +127,10 @@ namespace Ristorante360.Controllers
 
                 if (isNewProduct)
                 {
-                    _ristorante360Context.Products.Add(product);
+                    _ristoranteContext.Products.Add(product);
                 }
 
-                _ristorante360Context.SaveChanges();
+                _ristoranteContext.SaveChanges();
                 _logService.Log($"Se {(isNewProduct ? "creó" : "actualizó")} el producto: {product.ProductName}", "Productos");
 
                 return RedirectToAction("ProductList", "Productos");
@@ -151,7 +151,7 @@ namespace Ristorante360.Controllers
         {
             try
             {
-                Product oProduct = _ristorante360Context.Products.Include(c => c.oCategory).Where(u => u.ProductId == productId).FirstOrDefault();
+                Product oProduct = _ristoranteContext.Products.Include(c => c.oCategory).Where(u => u.ProductId == productId).FirstOrDefault();
 
                 if (oProduct == null)
                 {
@@ -186,8 +186,8 @@ namespace Ristorante360.Controllers
                 // Eliminar la imagen asociada al producto de la ruta 
                 DeleteProductImage(productToDelete.Image, webHostEnvironment);
 
-                _ristorante360Context.Products.Remove(productToDelete);
-                _ristorante360Context.SaveChanges();
+                _ristoranteContext.Products.Remove(productToDelete);
+                _ristoranteContext.SaveChanges();
 
                 _logService.Log($"Se eliminó el producto con ID: {oProduct.ProductId}, llamado {oProduct.ProductName}", "Productos");
 
@@ -209,7 +209,7 @@ namespace Ristorante360.Controllers
         {
             try
             {
-                List<Supply> listSupplies = _ristorante360Context.Supplies.ToList();
+                List<Supply> listSupplies = _ristoranteContext.Supplies.ToList();
 
                 return View(listSupplies);
             }
@@ -232,7 +232,7 @@ namespace Ristorante360.Controllers
                 if (!string.IsNullOrEmpty(descripcion))
                 {
                     // Verificar si la descripción ya existe en la base de datos
-                    bool descripcionExistente = _ristorante360Context.Supplies.Any(s => s.Description == descripcion);
+                    bool descripcionExistente = _ristoranteContext.Supplies.Any(s => s.Description == descripcion);
 
                     if (!descripcionExistente)
                     {
@@ -241,8 +241,8 @@ namespace Ristorante360.Controllers
                             Description = descripcion
                         };
 
-                        _ristorante360Context.Supplies.Add(supply);
-                        _ristorante360Context.SaveChanges();
+                        _ristoranteContext.Supplies.Add(supply);
+                        _ristoranteContext.SaveChanges();
                         _logService.Log($"Se crea insumo: {descripcion}", "Productos");
 
                         return RedirectToAction("SuppliesList", "Productos");
@@ -277,13 +277,13 @@ namespace Ristorante360.Controllers
             try
             {
                 // Verifica si el insumo está parametrizado a un producto y obtén el registro relacionado
-                var supplyForProduct = _ristorante360Context.SuppliesForProducts.FirstOrDefault(sfp => sfp.SuppliesId == suppliesId);
+                var supplyForProduct = _ristoranteContext.SuppliesForProducts.FirstOrDefault(sfp => sfp.SuppliesId == suppliesId);
 
                 if (supplyForProduct != null)
                 {
                     // El insumo está parametrizado a un producto, obtén información del producto
                     int productId = supplyForProduct.ProductId;
-                    var product = _ristorante360Context.Products.FirstOrDefault(p => p.ProductId == productId);
+                    var product = _ristoranteContext.Products.FirstOrDefault(p => p.ProductId == productId);
 
                     if (product != null)
                     {
@@ -295,12 +295,12 @@ namespace Ristorante360.Controllers
                 }
 
                 // Si el insumo no está parametrizado a un producto, continúa con la eliminación
-                Supply supplyDelete = _ristorante360Context.Supplies.Find(suppliesId);
+                Supply supplyDelete = _ristoranteContext.Supplies.Find(suppliesId);
 
                 if (supplyDelete != null)
                 {
-                    _ristorante360Context.Supplies.Remove(supplyDelete);
-                    _ristorante360Context.SaveChanges();
+                    _ristoranteContext.Supplies.Remove(supplyDelete);
+                    _ristoranteContext.SaveChanges();
 
                 }
 

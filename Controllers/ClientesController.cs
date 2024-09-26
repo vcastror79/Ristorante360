@@ -1,28 +1,25 @@
-﻿using Ristorante360.Models;
-using Ristorante360.Services.Contract;
+﻿using Ristorante360Admin.Models;
+using Ristorante360Admin.Models.ViewModels;
+using Ristorante360Admin.Services.Contract;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-
-using Ristorante360.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
-
-
-namespace Ristorante360.Controllers
+namespace Ristorante360Admin.Controllers
 {
     [Authorize]
     public class ClientesController : Controller
     {
-        private readonly RistoranteContext _elChanteContext; // Asegúrate de usar este nombre consistentemente
+        private readonly RistoranteContext _ristoranteContext; // Asegúrate de usar este nombre consistentemente
         private readonly ILogService _logService;
         private readonly IErrorLoggingService _errorLoggingService;
 
         // Constructor corregido
-        public ClientesController(RistoranteContext elChanteContext, ILogService logService, IErrorLoggingService errorLoggingService)
+        public ClientesController(RistoranteContext ristoranteContext, ILogService logService, IErrorLoggingService errorLoggingService)
         {
-            _elChanteContext = elChanteContext; // Corregir la asignación, asegurarse de usar el nombre correcto
+            _ristoranteContext = ristoranteContext; // Corregir la asignación, asegurarse de usar el nombre correcto
             _logService = logService;
             _errorLoggingService = errorLoggingService;
         }
@@ -31,7 +28,7 @@ namespace Ristorante360.Controllers
         {
             try
             {
-                List<Client> listClient = _elChanteContext.Clients
+                List<Client> listClient = _ristoranteContext.Clients
                     .Where(client => client.status == true)
                     .ToList();
                 return View(listClient);

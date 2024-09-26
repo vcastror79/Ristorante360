@@ -1,9 +1,8 @@
-﻿using Ristorante360.Models;
-using Ristorante360.Models.ViewModels;
-using Ristorante360.Services.Contract;
+﻿using Ristorante360Admin.Models;
+using Ristorante360Admin.Models.ViewModels;
+using Ristorante360Admin.Services.Contract;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -11,7 +10,7 @@ using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
-namespace Ristorante360.Controllers
+namespace Ristorante360Admin.Controllers
 {
     [Authorize]
     public class AdminController : Controller
@@ -21,9 +20,9 @@ namespace Ristorante360.Controllers
         private readonly IErrorLoggingService _errorLoggingService;
 
 
-        public AdminController(RistoranteContext RistoranteContext, ILogService logService, IErrorLoggingService errorLoggingService)
+        public AdminController(RistoranteContext ristoranteContext, ILogService logService, IErrorLoggingService errorLoggingService)
         {
-            _ristoranteContext = RistoranteContext;
+            _ristoranteContext = ristoranteContext;
             _logService = logService;
             _errorLoggingService = errorLoggingService;
         }

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Ristorante360.Models;
+namespace Ristorante360Admin.Models;
 
 public partial class UnitType
 {

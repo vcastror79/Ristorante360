@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Ristorante360.Models;
-using Ristorante360.Models.ViewModels;
-using Ristorante360.Resources;
-using Ristorante360.Services.Contract;
+using Ristorante360Admin.Models;
+using Ristorante360Admin.Models.ViewModels;
+using Ristorante360Admin.Resources;
+using Ristorante360Admin.Services.Contract;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 using System.Data.Common;
 using Newtonsoft.Json;
 
-namespace ElChanteAdmin.Controllers
+namespace Ristorante360Admin.Controllers
 {
 
     public class UserController : Controller
@@ -21,7 +21,7 @@ namespace ElChanteAdmin.Controllers
         private readonly string urlDomain = "https://localhost:7010/";
         private readonly IConfiguration _configuration;
         private readonly IUserService _userService;
-        private readonly RistoranteContext _elChanteContext;
+        private readonly RistoranteContext _ristoranteContext;
         private readonly IEmailService _emailService; // Agregamos el servicio de Email
         private readonly ILogService _logService;
         private readonly IErrorLoggingService _errorLoggingService;
@@ -52,7 +52,7 @@ namespace ElChanteAdmin.Controllers
                     return View();
                 }
 
-                var userNew = await _elChanteContext.Users.FirstOrDefaultAsync(u => u.Email == user.Email && u.RoleId == 3);
+                var userNew = await _ristoranteContext.Users.FirstOrDefaultAsync(u => u.Email == user.Email && u.RoleId == 3);
 
                 if (userNew != null)
                 {
@@ -162,7 +162,7 @@ namespace ElChanteAdmin.Controllers
             try
             {
                 // Recuperar el usuario existente de la base de datos
-                var existingUser = await _elChanteContext.Users.FirstOrDefaultAsync(u => u.Email == model.Email);
+                var existingUser = await _ristoranteContext.Users.FirstOrDefaultAsync(u => u.Email == model.Email);
 
                 // Verificar si el usuario existe
                 if (existingUser == null)
@@ -183,7 +183,7 @@ namespace ElChanteAdmin.Controllers
                 }
 
                 // Guardar los cambios en la base de datos
-                await _elChanteContext.SaveChangesAsync();
+                await _ristoranteContext.SaveChangesAsync();
 
                 TempData["RegisterSuccess"] = true;
                 return RedirectToAction(nameof(Register));
@@ -212,7 +212,7 @@ namespace ElChanteAdmin.Controllers
         {
             try
             {
-                var user = await _elChanteContext.Users.FirstOrDefaultAsync(u => u.Email == model.Email);
+                var user = await _ristoranteContext.Users.FirstOrDefaultAsync(u => u.Email == model.Email);
 
                 if (user != null)
                 {
@@ -280,13 +280,13 @@ namespace ElChanteAdmin.Controllers
 
                 string token = Utilities.EncryptKey(Guid.NewGuid().ToString());
 
-                var oUser = await _elChanteContext.Users.Where(e => e.Email == model.Email).FirstOrDefaultAsync();
+                var oUser = await _ristoranteContext.Users.Where(e => e.Email == model.Email).FirstOrDefaultAsync();
 
                 if (oUser != null)
                 {
                     oUser.TokenRecovery = token;
-                    _elChanteContext.Users.Update(oUser);
-                    await _elChanteContext.SaveChangesAsync();
+                    _ristoranteContext.Users.Update(oUser);
+                    await _ristoranteContext.SaveChangesAsync();
 
                     // Envío de correo de recuperación
                     await _emailService.SendEmailAsync(oUser.Email, token);
@@ -322,7 +322,7 @@ namespace ElChanteAdmin.Controllers
                     return RedirectToAction("Login", "User");
                 }
 
-                var oUser = await _elChanteContext.Users.FirstOrDefaultAsync(t => t.TokenRecovery == token);
+                var oUser = await _ristoranteContext.Users.FirstOrDefaultAsync(t => t.TokenRecovery == token);
 
                 if (oUser == null)
                 {
@@ -362,7 +362,7 @@ namespace ElChanteAdmin.Controllers
                     return View(model);
                 }
 
-                var oUser = await _elChanteContext.Users.FirstOrDefaultAsync(t => t.TokenRecovery == model.token);
+                var oUser = await _ristoranteContext.Users.FirstOrDefaultAsync(t => t.TokenRecovery == model.token);
 
                 if (oUser != null)
                 {
@@ -371,8 +371,8 @@ namespace ElChanteAdmin.Controllers
                     oUser.Password = hashedPassword;
                     oUser.TokenRecovery = null;
 
-                    _elChanteContext.Update(oUser);
-                    await _elChanteContext.SaveChangesAsync();
+                    _ristoranteContext.Update(oUser);
+                    await _ristoranteContext.SaveChangesAsync();
 
                     ViewBag.MessageRecovery = "Contraseña modificada con éxito";
                     return View("Login");

@@ -1,23 +1,23 @@
 using Microsoft.AspNetCore.Mvc;
-using Ristorante360.Models;
+using Ristorante360Admin.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
 using System;
 using System.Linq;
 using System.Collections.Generic;
-using Ristorante360.Services.Contract;
+using Ristorante360Admin.Services.Contract;
 
-namespace PruebaElChante.Controllers
+namespace PruebaRistorante.Controllers
 {
     [Authorize]
     public class ReportesGraficosController : Controller
     {
-        private readonly RistoranteContext _ristorante360Context;
+        private readonly RistoranteContext _ristoranteContext;
         private readonly IErrorLoggingService _errorLoggingService; // Asegúrate de inyectar el servicio de registro de errores
 
-        public ReportesGraficosController(RistoranteContext ristorante360Context, IErrorLoggingService errorLoggingService)
+        public ReportesGraficosController(RistoranteContext ristoranteContext, IErrorLoggingService errorLoggingService)
         {
-            _ristorante360Context = RistoranteContext;
+            _ristoranteContext = ristoranteContext;
             _errorLoggingService = errorLoggingService;
         }
 
@@ -26,7 +26,7 @@ namespace PruebaElChante.Controllers
             try
             {
                 // Obtener los datos de la tabla Inventory desde la base de datos
-                var inventoryData = _ristorante360Context.Inventories.Include(i => i.oSupplies).Include(i => i.oUnitType).ToList();
+                var inventoryData = _ristoranteContext.Inventories.Include(i => i.oSupplies).Include(i => i.oUnitType).ToList();
 
                 // Mapear los datos necesarios para el gráfico de Cantidad en inventario
                 var labels = inventoryData.Select(item => item.oSupplies.Description).ToList();
@@ -126,7 +126,7 @@ namespace PruebaElChante.Controllers
             try
             {
                 // Obtener los datos de la tabla Productos desde la base de datos
-                var inventoryData = _ristorante360Context.Products.Include(i => i.oCategory).ToList();
+                var inventoryData = _ristoranteContext.Products.Include(i => i.oCategory).ToList();
 
                 // Calcular la cantidad de productos disponibles y no disponibles
                 var disponiblesCount = inventoryData.Count(p => p.Availability);
@@ -160,7 +160,7 @@ namespace PruebaElChante.Controllers
         {
             try
             {
-                List<Log> logList = _ristorante360Context.Logs.Include(l => l.User).ToList();
+                List<Log> logList = _ristoranteContext.Logs.Include(l => l.User).ToList();
                 return View(logList);
             }
             catch (Exception ex)

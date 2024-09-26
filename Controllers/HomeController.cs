@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using Ristorante360.Models;
+using Ristorante360Admin.Models;
 using System.Diagnostics;
 
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Authentication;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
-//using Ristorante360.Services.Contract;
+using Ristorante360Admin.Services.Contract;
 
 namespace Ristorante360.Controllers
 {
@@ -15,12 +15,12 @@ namespace Ristorante360.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly RistoranteContext _ristorante360Context;
+        private readonly RistoranteContext _ristoranteContext;
         private readonly IErrorLoggingService _errorLoggingService;
 
         public HomeController(ILogger<HomeController> logger, RistoranteContext ristorante360Context, IErrorLoggingService errorLoggingService)
         {
-            _ristorante360Context = ristorante360Context;
+            _ristoranteContext = ristorante360Context;
             _logger = logger;
             _errorLoggingService = errorLoggingService;
 
@@ -31,9 +31,9 @@ namespace Ristorante360.Controllers
             try
             {
 
-                int cantidadRegistros = _ristorante360Context.Products.Count();
-                int cantidadClientes = _ristorante360Context.Clients.Count();
-                int cantidadOrdenes = _ristorante360Context.Orders.Count();
+                int cantidadRegistros = _ristoranteContext.Products.Count();
+                int cantidadClientes = _ristoranteContext.Clients.Count();
+                int cantidadOrdenes = _ristoranteContext.Orders.Count();
                 ViewBag.CantidadRegistros = cantidadRegistros;
                 ViewBag.CantidadClientes = cantidadClientes;
                 ViewBag.CantidadOrdenes = cantidadOrdenes;
@@ -47,7 +47,7 @@ namespace Ristorante360.Controllers
                     nameUser = claimUser.Claims.Where(c => c.Type == ClaimTypes.Name).Select(c => c.Value).SingleOrDefault();
                 }
                 ViewData["nameUser"] = nameUser;
-                List<Notification> notifications = _ristorante360Context.Notifications.Include(n => n.Inventory).ToList();
+                List<Notification> notifications = _ristoranteContext.Notifications.Include(n => n.Inventory).ToList();
 
                 return View(notifications);
             }
@@ -60,8 +60,6 @@ namespace Ristorante360.Controllers
                 return View("Error");
             }
         }
-
-
 
         public async Task<IActionResult> LogOff()
         {
@@ -86,11 +84,11 @@ namespace Ristorante360.Controllers
         {
             try
             {
-                var notification = _ristorante360Context.Notifications.FirstOrDefault(n => n.NotificationId == notificationId);
+                var notification = _ristoranteContext.Notifications.FirstOrDefault(n => n.NotificationId == notificationId);
                 if (notification != null)
                 {
                     notification.IsRead = true;
-                    _ristorante360Context.SaveChanges();
+                    _ristoranteContext.SaveChanges();
                     return Ok();
                 }
                 else
