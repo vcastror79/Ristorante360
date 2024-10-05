@@ -1,0 +1,13 @@
+﻿body {
+}
+
+.btn-subtle {
+    background-color: transparent;
+    color: #00aaff;
+    border: none;
+}
+
+.btn-subtle:hover {
+    text-decoration: underline;
+
+}
