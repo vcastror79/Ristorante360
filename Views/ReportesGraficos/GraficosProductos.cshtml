@@ -1,0 +1,165 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout_General.cshtml";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- Agrega la referencia a la biblioteca de Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <!-- Agrega el contenido del layout -->
+    <div class="content-body">
+        <div class="container-fluid">
+            <div class="row">
+                <!-- Agregar un nuevo contenedor para el gráfico de disponibilidad de productos -->
+                <div class="col-md-12">
+                    <div class="card chart-card-container">
+                        <div class="card-header">
+                            <h4 class="card-title">Gráfico de Disponibilidad de Productos</h4>
+                        </div>
+                        <div class="card-body d-flex">
+                            <!-- Contenedor para los productos disponibles -->
+                            <div class="mr-3">
+                                <h5>Productos Disponibles:</h5>
+                                <ul class="list-unstyled">
+                                    @foreach (var producto in ViewData["Disponibles"] as List<string>)
+                                    {
+                                        <li>@producto</li>
+                                    }
+                                </ul>
+                            </div>
+
+                            <!-- Contenedor para el gráfico -->
+                            <div class="chart-container" style="position: relative; height: 300px; flex-grow: 1;">
+                                <canvas id="availabilityChart"></canvas>
+                            </div>
+
+                            <!-- Contenedor para los productos no disponibles -->
+                            <div class="ml-3">
+                                <h5>Productos No Disponibles:</h5>
+                                <ul class="list-unstyled">
+                                    @foreach (var producto in ViewData["NoDisponibles"] as List<string>)
+                                    {
+                                        <li>@producto</li>
+                                    }
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+                <!-- Agregar un nuevo contenedor para el gráfico precios por producto -->
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card chart-card-container">
+                            <div class="card-header">
+                                <h4 class="card-title">Gráfico de Barras - Precio de Productos</h4>
+                            </div>
+                            <div class="card-body">
+                                <div class="chart-container" style="position: relative; height: 300px; width: 100%;">
+                                    <canvas id="priceChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    
+
+    <!-- Fin del nuevo contenedor para el gráfico de disponibilidad de productos -->
+    <!-- Agrega el script para el gráfico de disponibilidad de productos -->
+    <script>
+        // Recuperar los datos de disponibilidad de productos pasados por el controlador
+        var disponibles = @Html.Raw(Json.Serialize(ViewData["Disponibles"]));
+        var noDisponibles = @Html.Raw(Json.Serialize(ViewData["NoDisponibles"]));
+
+        // Configuración del gráfico de pastel de disponibilidad de productos
+        var availabilityOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'right', // Ubicar la leyenda en el lado derecho
+                    labels: {
+                        usePointStyle: true,
+                    },
+                },
+            },
+        };
+
+        var ctxAvailability = document.getElementById('availabilityChart').getContext('2d');
+        var availabilityChart = new Chart(ctxAvailability, {
+            type: 'pie',
+            data: {
+                labels: ['Disponibles', 'No Disponibles'],
+                datasets: [
+                    {
+                        label: 'Disponibilidad de Productos',
+                        backgroundColor: ['rgba(75, 192, 192, 0.2)', 'rgba(255, 99, 132, 0.2)'],
+                        borderColor: ['rgba(75, 192, 192, 1)', 'rgba(255, 99, 132, 1)'],
+                        borderWidth: 1,
+                        data: [disponibles.length, noDisponibles.length],
+                    }
+                ],
+            },
+            options: availabilityOptions,
+        });
+
+    </script>
+    <script>
+        // Recuperar los datos de precios de productos pasados por el controlador
+        var productPrices = @Html.Raw(Json.Serialize(ViewData["ProductPrices"]));
+
+        // Obtener las etiquetas (nombres de productos) y los precios de los productos
+        var labels = productPrices.map(p => p.productName);
+        var prices = productPrices.map(p => p.price);
+
+        // Configuración del gráfico de barras
+        var priceOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Precio'
+                    }
+                },
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Productos'
+                    }
+                }
+            }
+        };
+
+        var ctxPrice = document.getElementById('priceChart').getContext('2d');
+        var priceChart = new Chart(ctxPrice, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [
+                    {
+                        label: 'Precio de Productos',
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1,
+                        data: prices,
+                    }
+                ],
+            },
+            options: priceOptions,
+        });
+    </script>
+
+
+
+</body>
+</html>

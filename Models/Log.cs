@@ -7,11 +7,11 @@ public partial class Log
 {
     public int LogId { get; set; }
 
-    public string Detail { get; set; } = null!;
-
-    public string Module { get; set; } = null!;
+    public string? Detail { get; set; }
 
     public DateTime LogDate { get; set; }
+
+    public string? Module { get; set; }
 
     public int UserId { get; set; }
 

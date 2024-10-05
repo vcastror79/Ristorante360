@@ -7,9 +7,9 @@ namespace Ristorante360Admin.Services.Implementation
 {
     public class UserService : IUserService
     {
-        private readonly RistoranteContext _dbcontext;
+        private readonly ApplicationDbContext _dbcontext;
 
-        public UserService(RistoranteContext dbContext)
+        public UserService(ApplicationDbContext dbContext)
         {
             _dbcontext = dbContext;
         }

@@ -7,9 +7,9 @@ namespace Ristorante360Admin.Services.Implementation
     public class EmailService : IEmailService
     {
         private readonly IConfiguration _configuration;
-        private readonly RistoranteContext _ristoranteContext;
+        private readonly ApplicationDbContext _ristoranteContext;
 
-        public EmailService(IConfiguration configuration, RistoranteContext ristoranteContext)
+        public EmailService(IConfiguration configuration, ApplicationDbContext ristoranteContext)
         {
             _configuration = configuration;
             _ristoranteContext = ristoranteContext;

@@ -1,5 +1,4 @@
 ﻿using Ristorante360Admin.Models;
-using Ristorante360Admin.Models.ViewModels;
 using Ristorante360Admin.Services.Contract;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
@@ -9,18 +8,19 @@ using System;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Ristorante360Admin.Models.ViewModels;
 
 namespace Ristorante360Admin.Controllers
 {
     [Authorize]
     public class AdminController : Controller
     {
-        private readonly RistoranteContext _ristoranteContext;
+        private readonly ApplicationDbContext _ristoranteContext;
         private readonly ILogService _logService;
         private readonly IErrorLoggingService _errorLoggingService;
 
 
-        public AdminController(RistoranteContext ristoranteContext, ILogService logService, IErrorLoggingService errorLoggingService)
+        public AdminController(ApplicationDbContext ristoranteContext, ILogService logService, IErrorLoggingService errorLoggingService)
         {
             _ristoranteContext = ristoranteContext;
             _logService = logService;

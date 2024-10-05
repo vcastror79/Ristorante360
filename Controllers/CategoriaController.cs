@@ -6,9 +6,9 @@ namespace Ristorante360Admin.Controllers
     public class CategoriaController : Controller
     {
         //Conexion DB
-        private readonly RistoranteContext? _ristorante360Context;
+        private readonly ApplicationDbContext? _ristorante360Context;
 
-        public CategoriaController(RistoranteContext? ristorante360Context)
+        public CategoriaController(ApplicationDbContext? ristorante360Context)
         {
             _ristorante360Context = ristorante360Context;
         }

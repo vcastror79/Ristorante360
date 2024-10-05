@@ -1,0 +1,219 @@
+﻿@model Ristorante360Admin.Models.ViewModels.InventoryVM
+@{
+    ViewData["Title"] = "Ristorante 360 - Agregar Insumo";
+
+    Layout = "~/Views/Shared/_Layout_General.cshtml";
+}
+
+<div class="content-body">
+    <div class="container-fluid">
+        <div class="row page-titles mx-0">
+            <div class="col-sm-6 p-md-0">
+                <div class="welcome-text">
+                    @if (Model.oInventory.InventoryId == 0)
+                    {
+                        <h4>Entrada de insumo</h4>
+                    }
+                    else
+                    {
+                        <h4>Editar insumo existente</h4>
+
+                    }
+
+                </div>
+            </div>
+            <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="javascript:void(0)">Administrar</a></li>
+                    @if (Model.oInventory.InventoryId == 0)
+                    {
+                        <li class="breadcrumb-item active"><a href="javascript:void(0)">Entrada</a></li>
+                    }
+                    else
+                    {
+                        <li class="breadcrumb-item active"><a href="javascript:void(0)">Editar</a></li>
+                    }
+                </ol>
+            </div>
+        </div>
+        <!-- row -->
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header">
+                    @if (Model.oInventory.InventoryId == 0)
+                    {
+                        <h4 class="card-title">Agregar entrada de insumo</h4>
+                    }
+                    else
+                    {
+                        <h4 class="card-title">Editar usuario</h4>
+                    }
+                </div>
+                <div class="card-body">
+                    <div class="basic-form">
+                        <form asp-action="AgregarInsumo" asp-controller="Inventario" method="post" class="needs-validation" novalidate>
+                            <input type="hidden" asp-for="oInventory.InventoryId" class="form-control">
+
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label for="inputState">Insumo:</label>
+                                    <select id="inputState" class="form-control" asp-for="oInventory.SuppliesId" required>
+                                        <option value="">-- Seleccionar Insumo --</option>
+                                        @foreach (var supply in Model.oListSupplies)
+                                        {
+                                            <option value="@supply.Value">@supply.Text</option>
+                                        }
+                                    </select>
+                                    <div class="invalid-feedback">
+                                        Por favor seleccione un insumo.
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="cantidad">Cantidad:</label>
+                                    <input type="number" class="form-control" asp-for="oInventory.Amount" required min="1" max="5000">
+                                    <div class="invalid-feedback">
+                                        Por favor ingrese una cantidad válida entre 1 y 5000.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label for="unidad">Unidad:</label>
+                                    <select id="unidad" class="form-control" asp-for="oInventory.UnitId" required>
+                                        <option value="">-- Seleccionar unidad --</option>
+                                        @foreach (var unitType in Model.oListUnitTypes)
+                                        {
+                                            <option value="@unitType.Value">@unitType.Text</option>
+                                        }
+                                    </select>
+                                    <div class="invalid-feedback">
+                                        Por favor seleccione una unidad.
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-md-6">
+                                    <label for="cantidadMinima">Cantidad Minima:</label>
+                                    <input type="number" class="form-control" asp-for="oInventory.MinimumAmount" required min="1" max="5000">
+                                    <div class="invalid-feedback">
+                                        Por favor ingrese una cantidad mínima válida entre 1 y 5000.
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="lote">Lote: </label>
+                                    <input type="number" class="form-control" asp-for="oInventory.Lote" required min="1" max="10000">
+                                    <div class="invalid-feedback">
+                                        Por favor ingrese un lote válido entre 1 y 10000.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row form-material">
+                                <div class="col-xl-3 col-xxl-6 col-md-6 mb-3">
+                                    <label>Fecha de Ingreso:</label>
+                                    <input type="date" class="form-control" asp-for="oInventory.AdmissionDate" id="admissionDate" required>
+                                    <div class="invalid-feedback">
+                                        Por favor ingrese una fecha de ingreso válida.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row form-material">
+                                <div class="col-xl-3 col-xxl-6 col-md-6 mb-3">
+                                    <label>Fecha de Expiracion:</label>
+                                    <input type="date" class="form-control" asp-for="oInventory.ExpirationDate" id="expirationDate" required>
+                                    <div class="invalid-feedback">
+                                        Por favor ingrese una fecha de expiración válida.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <input type="hidden" asp-for="oInventory.Status" value="True">
+
+                            @if (Model.oInventory.InventoryId == 0)
+                            {
+                                <button type="submit" class="btn btn-primary">Agregar Insumo</button>
+                            }
+                            else
+                            {
+                                <button type="submit" class="btn btn-primary">Actualizar Insumo</button>
+                            }
+
+                            <a class="btn btn-dark" asp-controller="Inventario" asp-action="ConsultaInventario">Volver</a>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/vendor/bootstrap-select/dist/js/bootstrap-select.min.js"></script>
+<script src="~/js/custom.min.js"></script>
+<script src="~/js/deznav-init.js"></script>
+
+<!-- Datatable -->
+<script src="~/vendor/datatables/js/jquery.dataTables.min.js"></script>
+<script src="~/js/plugins-init/datatables.init.js"></script>
+
+<!-- Daterangepicker -->
+<!-- momment js is must -->
+<script src="~/vendor/moment/moment.min.js"></script>
+<script src="~/vendor/bootstrap-daterangepicker/daterangepicker.js"></script>
+<!-- clockpicker -->
+<script src="~/vendor/clockpicker/js/bootstrap-clockpicker.min.js"></script>
+<!-- asColorPicker -->
+<script src="~/vendor/jquery-asColor/jquery-asColor.min.js"></script>
+<script src="~/vendor/jquery-asGradient/jquery-asGradient.min.js"></script>
+<script src="~/vendor/jquery-asColorPicker/js/jquery-asColorPicker.min.js"></script>
+<!-- Material color picker -->
+<script src="~/vendor/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js"></script>
+<!-- pickdate -->
+<script src="~/vendor/pickadate/picker.js"></script>
+<script src="~/vendor/pickadate/picker.time.js"></script>
+<script src="~/vendor/pickadate/picker.date.js"></script>
+<!-- Daterangepicker -->
+<script src="~/js/plugins-init/bs-daterange-picker-init.js"></script>
+<!-- Clockpicker init -->
+<script src="~/js/plugins-init/clock-picker-init.js"></script>
+<!-- asColorPicker init -->
+<script src="~/js/plugins-init/jquery-asColorPicker.init.js"></script>
+<!-- Material color picker init -->
+<script src="~/js/plugins-init/material-date-picker-init.js"></script>
+<!-- Pickdate -->
+<script src="~/js/plugins-init/pickadate-init.js"></script>
+
+<!-- Fecha predeterminada en el Pickdate -->
+<script src="~/js/customscripts/jscustom.js"></script>
+
+<script src="~/js/customscripts/inventariocrtl.js"></script>
+
+<script>
+    $(document).ready(function () {
+        // Validación del formulario
+        $('form').submit(function (event) {
+            if (!this.checkValidity()) {
+                // Si el formulario no es válido, evitar que se envíe
+                event.preventDefault();
+                event.stopPropagation();
+            }
+
+            // Agregar clases CSS de validación (touched y was-validated) a los campos
+            $(this).addClass('was-validated');
+        });
+
+        // Validación para el campo de Cantidad
+        $('.quantity-input').on('input', function () {
+            var quantity = parseInt($(this).val(), 10);
+            var isValid = quantity > 0;
+
+            // Agregar o quitar la clase CSS 'is-invalid' según la validación
+            if (isValid) {
+                $(this).removeClass('is-invalid');
+            } else {
+                $(this).addClass('is-invalid');
+            }
+        });
+    });
+</script>

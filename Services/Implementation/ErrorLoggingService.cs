@@ -9,9 +9,9 @@ namespace Ristorante360Admin.Services.Implementation
 {
     public class ErrorLoggingService : IErrorLoggingService
     {
-        private readonly RistoranteContext _ristoranteContext;
+        private readonly ApplicationDbContext _ristoranteContext;
 
-        public ErrorLoggingService(RistoranteContext ristoranteContext)
+        public ErrorLoggingService(ApplicationDbContext ristoranteContext)
         {
             _ristoranteContext = ristoranteContext;
         }

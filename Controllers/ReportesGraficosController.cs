@@ -12,10 +12,10 @@ namespace PruebaRistorante.Controllers
     [Authorize]
     public class ReportesGraficosController : Controller
     {
-        private readonly RistoranteContext _ristoranteContext;
+        private readonly ApplicationDbContext _ristoranteContext;
         private readonly IErrorLoggingService _errorLoggingService; // Asegúrate de inyectar el servicio de registro de errores
 
-        public ReportesGraficosController(RistoranteContext ristoranteContext, IErrorLoggingService errorLoggingService)
+        public ReportesGraficosController(ApplicationDbContext ristoranteContext, IErrorLoggingService errorLoggingService)
         {
             _ristoranteContext = ristoranteContext;
             _errorLoggingService = errorLoggingService;

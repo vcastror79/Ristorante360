@@ -1,0 +1,131 @@
+﻿
+@model Ristorante360Admin.Models.ViewModels.UserVM
+@{
+    @if (Model.oUser.UserId == 0)
+    {
+        ViewData["Title"] = "Crear usuario";
+    }
+    else
+    {
+        ViewData["Title"] = "Editar usuario";
+
+    }
+    Layout = "~/Views/Shared/_Layout_General.cshtml";
+}
+
+<div class="content-body">
+    <div class="container-fluid">
+        <div class="row page-titles mx-0">
+            <div class="col-sm-6 p-md-0">
+                <div class="welcome-text">
+                    <h4>Hola, Bienvenido!</h4>
+                    <span>Editar</span>
+                </div>
+            </div>
+            <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="javascript:void(0)">Administrar</a></li>
+                    @if (Model.oUser.UserId == 0)
+                    {
+                        <li class="breadcrumb-item active"><a href="javascript:void(0)">Crear</a></li>
+                    }
+                    else
+                    {
+                        <li class="breadcrumb-item active"><a href="javascript:void(0)">Editar</a></li>
+                    }
+                </ol>
+            </div>
+        </div>
+        <!-- row -->
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header">
+                    @if (Model.oUser.UserId == 0)
+                    {
+                        <h4 class="card-title">Crear usuario</h4>
+                    }else{
+                        <h4 class="card-title">Editar usuario</h4>
+                    }
+                </div>
+                <div class="card-body">
+                    <div class="basic-form">
+                        <form asp-action="UserCreate" asp-controller="Admin" method="post">
+                            <div class="form-row">
+                                    <input type="hidden" asp-for="oUser.UserId" class="form-control">
+
+                                <div class="form-group col-md-6">
+                                    <label asp-for="oUser.Name">Nombre</label>
+                                    <input type="text" class="form-control" asp-for="oUser.Name" maxlength="20">
+                                    <span asp-validation-for="oUser.Name" class="text-danger"></span>
+
+                                </div>                             
+                                <div class="form-group col-md-6">
+                                    <label>Apellidos</label>
+                                    <input type="text" class="form-control" asp-for="oUser.Surname" maxlength="20">
+                                    <span asp-validation-for="oUser.Surname" class="text-danger"></span>
+
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label>Correo Electrónico</label>
+                                    <input type="email" class="form-control" asp-for="oUser.Email" placeholder="elchante@correo.com">
+                                    <span asp-validation-for="oUser.Email" class="text-danger"></span>
+
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label></label>
+                                    <input type="hidden" asp-for="oUser.Password" value="Temp2023">
+                                </div>
+
+
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-4">
+                                    <label>Roles</label>
+                                    <a id="popover-trigger" data-container="body" data-toggle="popover" data-placement="right" data-content="La contraseña que requiere un usuario con rol nuevo es: Temp2023" title="Recordatorio usuario nuevo:">
+                                        <img src="~/informacion.png" alt="Imagen" width="24" height="24">
+                                    </a>
+                                    <select id="inputState" class="form-control" asp-for="oUser.RoleId" asp-items="@Model.oListRole" required>
+                                    </select>
+                                    <span asp-validation-for="oUser.RoleId" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            @if (Model.oUser.UserId == 0)
+                            {
+                                <button type="submit" class="btn btn-primary">Crear Usuario</button>
+
+                            }else
+                            {
+                                <button type="submit" class="btn btn-primary">Actualizar Usuario</button>
+                            }
+                            <a class="btn btn-dark" asp-controller="Admin" asp-action="UserAdmin">Volver</a>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $('[data-toggle="popover"]').popover()
+    })
+
+    $(function () {
+        $('#popover-trigger').popover({
+            trigger: 'click',
+            html: true
+        });
+
+        $(document).on('click', function (e) {
+            $('#popover-trigger').each(function () {
+                // Comprobar si el clic fue fuera del popover
+                if (!$(this).is(e.target) && $(this).has(e.target).length === 0 && $('.popover').has(e.target).length === 0) {
+                    $(this).popover('hide');
+                }
+            });
+        });
+    });
+</script>

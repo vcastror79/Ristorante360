@@ -1,0 +1,106 @@
+﻿@model Ristorante360Admin.Models.Product
+
+@{
+    ViewData["Title"] = "Detalle de Productos";
+    Layout = "~/Views/Shared/_Layout_General.cshtml";
+}
+
+
+
+<div class="content-body">
+    <div class="container-fluid">
+        <div class="row page-titles mx-0">
+            <div class="col-sm-6 p-md-0">
+                <div class="welcome-text">
+                    <h4>Confirmar producto</h4>
+                    <p class="mb-0">Your business dashboard template</p>
+                </div>
+            </div>
+            <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="javascript:void(0)">Modulo de pedidos</a></li>
+                    <li class="breadcrumb-item active"><a href="javascript:void(0)">Confirmación</a></li>
+                </ol>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-xl-3 ">
+                                <div class="tab-content">
+                                    <div class="new-arrivals-img-contnent">
+                                        <img class="img-fluid custom-size" src="~/images/product/@Model.Image">
+                                    </div>
+                                </div>
+                                <div class="tab-slide-content new-arrival-product mb-4 mb-xl-0">
+                                </div>
+                            </div>
+                            <div class="col-xl-9 col-sm-12">
+                                <div class="product-detail-content">
+                                    <div class="new-arrival-content pr">
+                                        <!--Nombre Producto-->
+                                        <h4>@Model.ProductName</h4>
+
+                                        <!--Disponibilidad e Informacion de Producto-->
+                                        @if (Model.Availability == true)
+                                        {
+                                            <p>
+                                                Disponible: <span class="item">
+                                                    En existencia <i class="fa fa-check-circle text-success"></i>
+                                                </span>
+                                            </p>
+                                        }
+                                        else
+                                        {
+                                            <p>
+                                                Disponible: <span class="item">
+                                                    En existencia <i class="fa fa-circle text-danger"></i>
+                                                </span>
+                                            </p>
+                                        }
+
+                                        <p>Codigo de Producto: <span class="item">@Model.ProductId</span> </p>
+
+                                        <!--Descripcion de producto-->
+                                        <p class="text-content">@Model.ProductDescription</p>
+
+
+
+                                        <div class="col-2 px-0">
+                                            <input type="number" name="num" class="form-control input-btn input-number" value="1">
+                                        </div>
+
+                                        <div class="shopping-cart mt-3">
+                                            <a class="btn btn-primary" asp-controller="VentasPedidos" asp-action="DetalleProducto">
+                                                Enviar a carrito<span class="btn-icon-right"><i class="fa fa-shopping-cart"></i></span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+<!-- Required vendors -->
+<script src="~/vendor/bootstrap-select/dist/js/bootstrap-select.min.js"></script>
+<script src="~/vendor/chart.js/Chart.bundle.min.js"></script>
+<script src="~/js/custom.min.js"></script>
+<script src="~/js/deznav-init.js"></script>
+<!-- Apex Chart -->
+<script src="~/vendor/apexchart/apexchart.js"></script>
+
+<script src="~/vendor/highlightjs/highlight.pack.min.js"></script>
+<!-- Circle progress -->
+
+
+<script src="~/vendor/sweetalert2/dist/sweetalert2.min.js"></script>
+<script src="~/js/plugins-init/sweetalert.init.js"></script>

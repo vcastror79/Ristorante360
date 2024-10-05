@@ -15,7 +15,7 @@ namespace Ristorante360Admin.Models.ViewModels
         [MinLength(8, ErrorMessage = "La contraseña debe tener al menos 8 caracteres.")]
         [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).*$", ErrorMessage = "La contraseña debe contener al menos una minúscula, una mayúscula y un número.")]
         [Required]
-        public string ConfirmPassword { get; set;}
+        public string ConfirmPassword { get; set; }
 
     }
 }

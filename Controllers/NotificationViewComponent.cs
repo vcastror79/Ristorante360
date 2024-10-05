@@ -8,10 +8,10 @@ namespace Ristorante360Admin.Controllers
 {
     public class NotificationViewComponent : ViewComponent
     {
-        private readonly RistoranteContext _context;
+        private readonly ApplicationDbContext _context;
         private readonly IErrorLoggingService _errorLoggingService; // Agrega la inyección del servicio de registro de errores
 
-        public NotificationViewComponent(RistoranteContext context, IErrorLoggingService errorLoggingService)
+        public NotificationViewComponent(ApplicationDbContext context, IErrorLoggingService errorLoggingService)
         {
             _context = context;
             _errorLoggingService = errorLoggingService; // Asigna el servicio de registro de errores

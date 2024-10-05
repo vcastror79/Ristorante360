@@ -13,20 +13,21 @@ using System.Threading.Tasks;
 using System.Data.Common;
 using Newtonsoft.Json;
 
+
 namespace Ristorante360Admin.Controllers
 {
 
     public class UserController : Controller
     {
-        private readonly string urlDomain = "https://localhost:7010/";
+        private readonly string urlDomain = "https://localhost:7097/";
         private readonly IConfiguration _configuration;
         private readonly IUserService _userService;
-        private readonly RistoranteContext _ristoranteContext;
+        private readonly ApplicationDbContext _ristoranteContext;
         private readonly IEmailService _emailService; // Agregamos el servicio de Email
         private readonly ILogService _logService;
         private readonly IErrorLoggingService _errorLoggingService;
 
-        public UserController(IUserService userService, RistoranteContext ristorante360Context, IConfiguration configuration, IEmailService emailService, ILogService logService, IErrorLoggingService errorLoggingService)
+        public UserController(IUserService userService, ApplicationDbContext ristorante360Context, IConfiguration configuration, IEmailService emailService, ILogService logService, IErrorLoggingService errorLoggingService)
         {
             _ristoranteContext = ristorante360Context;
             _userService = userService;

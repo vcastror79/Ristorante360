@@ -12,10 +12,10 @@ namespace Ristorante360Admin.Services.Contract
 
     public class LogService : ILogService
     {
-        private readonly RistoranteContext _dbContext; // Usar el tipo de contexto correcto
+        private readonly ApplicationDbContext _dbContext; // Usar el tipo de contexto correcto
         private readonly IHttpContextAccessor _httpContextAccessor; // Agrega el campo para acceder a HttpContext
 
-        public LogService(RistoranteContext dbContext, IHttpContextAccessor httpContextAccessor) // Usar el tipo de contexto correcto en el constructor
+        public LogService(ApplicationDbContext dbContext, IHttpContextAccessor httpContextAccessor) // Usar el tipo de contexto correcto en el constructor
         {
             _dbContext = dbContext;
             _httpContextAccessor = httpContextAccessor;

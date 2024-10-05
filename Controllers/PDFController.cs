@@ -18,9 +18,9 @@ namespace Ristorante_360_Admin.Controllers
     public class PDFController : Controller
     {
         private readonly IWebHostEnvironment _hostingEnvironment;
-        private readonly RistoranteContext _dbContext; // Agrega tu contexto de base de datos aquí
+        private readonly ApplicationDbContext _dbContext; // Agrega tu contexto de base de datos aquí
 
-        public PDFController(IWebHostEnvironment hostingEnvironment, RistoranteContext dbContext)
+        public PDFController(IWebHostEnvironment hostingEnvironment, ApplicationDbContext dbContext)
         {
             _hostingEnvironment = hostingEnvironment;
             _dbContext = dbContext;

@@ -1,0 +1,107 @@
+﻿@using Microsoft.AspNetCore.Mvc
+@model Ristorante360Admin.Models.ViewModels.UserLoginVM;
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en" class="h-100">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+
+    <title>El Chante - Iniciar Sesión</title>
+
+    <link rel="icon" type="image/png" sizes="16x16" href="~/images/logoChanteCircular.png">
+    <link href="~/css/style.css" rel="stylesheet" />
+</head>
+
+<body class="h-100" style="background-image: url('/images/fondoconazul.jpg'); background-size: cover;">
+
+    <div class="authincation h-100">
+        <div class="container h-100">
+            <div class="row justify-content-center h-100 align-items-center">
+                <div class="col-md-6">
+                    <div class="authincation-content">
+                        <div class="row no-gutters">
+                            <div class="col-xl-12">
+                                <div class="auth-form">
+                                    <h4 class="text-center mb-4">Iniciar Sesión</h4>
+
+                                    <form asp-controller="User"
+                                          asp-action="Login"
+                                          method="post">
+                                        <div class="form-group">
+                                            <label class="mb-1"><strong>Correo</strong></label>
+                                            <input class="form-control"
+                                                   type="text"
+                                                   placeholder="elchante@correo.com"
+                                                   name="Email" />
+                                            <span asp-validation-for="Email"
+                                                  class="text-danger"></span>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="mb-1"><strong>Contraseña</strong></label>
+                                            <input class="form-control"
+                                                   type="password"
+                                                   placeholder="Contraseña"
+                                                   name="Password" />
+                                            <span asp-validation-for="Password"
+                                                  class="text-danger"></span>
+                                        </div>
+
+                                        <div class="text-center">
+                                            <button class="btn btn-primary btn-block" type="submit">
+                                                Iniciar Sesión
+                                            </button>
+                                        </div>
+                                        <br />
+                                        @if (ViewBag.Message != null)
+                                        {
+                                            <div class="form-group">
+                                                <div class="alert alert-danger" role="alert">
+                                                    @ViewBag.Message
+                                                </div>
+                                            </div>
+                                        }
+                                        else if (ViewBag.ErrorToken != null)
+                                        {
+                                            <div class="form-group">
+                                                <div class="alert alert-danger" role="alert">
+                                                    @ViewBag.ErrorToken
+                                                </div>
+                                            </div>
+                                        }
+                                        else if (ViewBag.MessageRecovery != null)
+                                        {
+                                            <div class="form-group">
+                                                <div class="alert alert-success" role="alert">
+                                                    @ViewBag.MessageRecovery
+                                                </div>
+                                            </div>
+                                        }
+                                    </form>
+                                    <div class="new-account mt-3">
+                                  <p>¿Olvidaste la contraseña? <a class="text-primary" asp-controller="User" asp-action="StartRecovery">Recuperar contraseña</a></p>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <script src="~/vendor/global/global.min.js"></script>
+    <script src="~/vendor/bootstrap-select/dist/js/bootstrap-select.min.js"></script>
+    <script src="~/js/custom.min.js"></script>
+    <script src="~/js/deznav-init.js"></script>
+</body>
+
+</html>

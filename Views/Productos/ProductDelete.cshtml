@@ -1,0 +1,73 @@
+﻿@model Ristorante360Admin.Models.Product;
+@{
+    ViewData["Title"] = "ProductDelete";
+    Layout = "~/Views/Shared/_Layout_General.cshtml";
+}
+
+
+<div class="content-body">
+    <div class="container-fluid">
+        <div class="row page-titles mx-0">
+            <div class="col-sm-6 p-md-0">
+                <div class="welcome-text">
+                    <h4>¿Está seguro de eliminar el producto?</h4>
+                    <span>¿Está seguro de eliminar el producto?</span>
+                </div>
+            </div>
+            <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="javascript:void(0)">Administración</a></li>
+                    <li class="breadcrumb-item active"><a href="javascript:void(0)">Eliminar</a></li>
+                </ol>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="basic-form">
+                            <form asp-action="ProductDelete" asp-controller="Productos" method="post">
+                                <div class="form-row">
+                                    <input type="hidden" asp-for="ProductId" class="form-control">
+                                    <div class="form-group col-md-6">
+                                        <label asp-for="ProductName">Nombre</label>
+                                        <input type="text" class="form-control" asp-for="ProductName" disabled>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label>Descripción</label>
+                                        <input type="text" class="form-control" asp-for="ProductDescription" disabled>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label>Precio</label>
+                                        <input type="text" class="form-control" asp-for="Price" disabled>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label>Disponibilidad</label>
+                                        <input type="text" class="form-control" asp-for="Availability" disabled value="@(Model.Availability ? "Disponible" : "No Disponible")">
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label>Categoría</label>
+                                        <input type="text" class="form-control" asp-for="oCategory.CategoryName" disabled>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label>Imagen del producto</label>
+                                        <div class="card custom-card border">
+                                            <div class="card-body d-flex flex-column align-items-center">
+                                                <img src="~/Images/Product/@Model.Image" class="img-fluid" alt="Imagen del producto">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br>
+                                <div>
+                                    <button type="submit" class="btn btn-danger">Eliminar producto</button>
+                                    <a class="btn btn-dark" asp-controller="Productos" asp-action="ProductList">Volver</a>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

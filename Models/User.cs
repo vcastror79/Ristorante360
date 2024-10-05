@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
+
 namespace Ristorante360Admin.Models;
 
 public partial class User
@@ -35,3 +36,4 @@ public partial class User
 
     public virtual Role oRole { get; set; } = null!;
 }
+

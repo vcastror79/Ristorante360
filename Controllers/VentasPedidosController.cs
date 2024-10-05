@@ -6,21 +6,21 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Data.SqlClient;
 using Ristorante360Admin.Services.Contract;
 using System.Security.Claims;
-using Ristorante360.Services.Implementation;
+using Ristorante360Admin.Services.Implementation;
 
-namespace PruebaElChante.Controllers
+namespace PruebaRistorante360.Controllers
 {
     [Authorize]
 
     public class VentasPedidosController : Controller
     {
-        private readonly RistoranteContext _ristorante360Context;
+        private readonly ApplicationDbContext _ristorante360Context;
         private readonly ILogService _logService;
         private readonly ProcedureExecutor _procedureExecutor;
         private readonly IErrorLoggingService _errorLoggingService;
 
 
-        public VentasPedidosController(RistoranteContext ristoranteContext, ILogService logService, ProcedureExecutor procedureExecutor, IErrorLoggingService errorLoggingService)
+        public VentasPedidosController(ApplicationDbContext ristoranteContext, ILogService logService, ProcedureExecutor procedureExecutor, IErrorLoggingService errorLoggingService)
         {
             _ristorante360Context = ristoranteContext;
             _logService = logService;

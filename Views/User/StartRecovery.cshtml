@@ -1,0 +1,97 @@
+﻿@model Ristorante360Admin.Models.ViewModels.RecoveryViewModel;
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en" class="h-100">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Recuperar contraseña.</title>
+    <!-- Favicon icon -->
+    <link rel="icon" type="image/png" sizes="16x16" href="~/images/logoChanteCircular.png">
+    <link href="~/css/style.css" rel="stylesheet">
+
+</head>
+
+<body class="h-100" style="background-image: url('/images/fondoconazul.jpg'); background-size: cover;">
+    <div class="authincation h-100">
+        <div class="container h-100">
+            <div class="row justify-content-center h-100 align-items-center">
+                <div class="col-md-6">
+                    <div class="authincation-content">
+                        <div class="row no-gutters">
+                            <div class="col-xl-12">
+                                <div class="auth-form">
+                                    <h4 class="text-center mb-4">Recuperar contraseña</h4>
+                                    <form asp-controller="User" asp-action="StartRecovery" method="post">
+                                        <div class="form-group">
+                                            <label><strong>Correo Electronico</strong></label>
+                                            <input asp-for="Email" type="text" class="form-control" placeholder="elchante@correo.com">
+                                            <span asp-validation-for="Email" class="text-danger"></span>
+
+                                        </div>
+                                        <div class="text-center">
+                                            <button type="submit" class="btn btn-primary btn-block">Enviar</button>
+                                            <a href="/User/Login" class="btn btn-secondary btn-block">Volver</a>
+
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="~/vendor/global/global.min.js"></script>
+    <script src="~/vendor/bootstrap-select/dist/js/bootstrap-select.min.js"></script>
+    <script src="~/js/custom.min.js"></script>
+    <script src="~/js/deznav-init.js"></script>
+
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+    <script>
+        // Verificar si hubo un error al registrar el usuario
+        var recoveryError = '@TempData["RecoveryError"]';
+        if (recoveryError) {
+            swal({
+                title: "Error",
+                text: "Hubo un error al realizar el envio de recuperación. Favor verifique nuevamente",
+                icon: "error",
+                buttons: {
+                    confirm: "Cerrar"
+                }
+            });
+        }
+
+        var recoveryMessage = '@ViewData["MessageRecovery"]';
+        if (recoveryMessage) {
+            swal({
+                title: "Mensaje",
+                text: "@Html.Raw(ViewData["MessageRecovery"])",
+                icon: "success",
+                buttons: {
+                    confirm: {
+                        text: "Cerrar",
+                        value: true,
+                        visible: true,
+                        className: "",
+                        closeModal: true,
+                    }
+                }
+            }).then((value) => {
+                // Redirect to the Login action of the User controller
+                window.location.href = '@Url.Action("Login", "User")';
+            });
+        }
+    </script>
+</body>
+
+</html>

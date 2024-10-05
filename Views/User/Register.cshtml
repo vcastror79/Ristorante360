@@ -1,0 +1,161 @@
+﻿@using Microsoft.AspNetCore.Mvc
+@model Ristorante360Admin.Models.ViewModels.UserNewVM;
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en" class="h-100">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>El Chante - Crear Cuenta</title>
+    <!-- Favicon icon -->
+    <link rel="icon" type="image/png" sizes="16x16" href="~/images/logoChanteCircular.png">
+    <link href="~/css/style.css" rel="stylesheet">
+
+</head>
+
+<body class="h-100">
+    <div class="authincation h-100">
+        <div class="container h-100">
+            <div class="row justify-content-center h-100 align-items-center">
+                <div class="col-md-6">
+                    <div class="authincation-content">
+                        <div class="row no-gutters">
+                            <div class="col-xl-12">
+                                <div class="auth-form">
+                                    <h4 class="text-center mb-4">Cambiar contraseña de una cuenta nueva</h4>
+                                    <form asp-controller="User" asp-action="Register" method="post">
+                                        <div class="form-group">
+                                            <label class="mb-1"><strong>Correo Electrónico</strong></label>
+                                            <input class="form-control" type="text" asp-for="Email" readonly>
+                                        </div>
+
+                                        <input type="hidden" asp-for="Status" value=True>
+                                        <span asp-validation-for="Status" style="color:red"></span>
+
+                                        <input type="hidden" asp-for="RoleId" value="2">
+                                        <span asp-validation-for="RoleId" style="color:red"></span>
+
+
+                                        <div class="form-group">
+                                            <label class="mb-1"><strong>Contraseña</strong></label>
+                                            <div class="bootstrap-popover d-inline-block">
+                                                <a id="popover-trigger" data-container="body" data-toggle="popover" data-placement="right" data-content="La contraseña debe de ser mayor o igual a 8 caracteres, ademas contener: una minúscula, una mayúscula y un número." title="Requisitos de contraseña.">
+                                                    <img src="~/informacion.png" alt="Imagen" width="24" height="24">
+                                                </a>
+                                            </div>
+                                            <input class="form-control" type="password" asp-for="Password">
+                                            <span asp-validation-for="Password" style="color:red"></span>
+
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="mb-1"><strong>Confirmar contraseña</strong></label>
+                                            
+                                            <input class="form-control" type="password" asp-for="Password">
+                                            <span asp-validation-for="ConfirmPassword" style="color:red"></span>
+
+                                        </div>
+                                        <div class="text-center mt-4">
+                                            <button type="submit" class="btn btn-primary btn-block">Confirmar cuenta</button>
+                                        </div>
+                                        @if (ViewData["Mensaje"] != null)
+                                        {
+                                            <div class="form-group">
+                                                <div class="alert alert-danger" role="alert">
+                                                    @ViewData["Mensaje"]
+                                                </div>
+                                            </div>
+                                        }
+                                    </form>
+                                    <div class="new-account mt-3">
+                                        <p>Ya tiene una cuenta? <a class="text-primary" asp-controller="User" asp-action="Login">Iniciar Sesión</a></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="~/vendor/global/global.min.js"></script>
+    <script src="~/vendor/bootstrap-select/dist/js/bootstrap-select.min.js"></script>
+    <script src="~/js/custom.min.js"></script>
+    <script src="~/js/deznav-init.js"></script>
+
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+    <script>
+        // Verificar si el usuario fue registrado exitosamente
+        var registerSuccess = '@TempData["RegisterSuccess"]';
+        if (registerSuccess) {
+            swal({
+                title: "Éxito",
+                text: "El usuario ha sido registrado exitosamente.",
+                icon: "success",
+                buttons: {
+                    confirm: "Aceptar"
+                }
+            })
+                .then(function () {
+                    window.location.href = '@Url.Action("Login", "User")';
+                });
+        }
+
+        // Verificar si hubo un error al registrar el usuario
+        var registerError = '@TempData["RegisterError"]';
+        if (registerError) {
+            swal({
+                title: "Error",
+                text: "Hubo un error al registrar el usuario. Favor verifique nuevamente",
+                icon: "error",
+                buttons: {
+                    confirm: "Cerrar"
+                }
+            });
+        }
+
+        // Mostrar un mensaje personalizado proveniente del controlador
+        var registerMessage = '@ViewData["Message"]';
+        if (registerMessage) {
+            swal({
+                title: "Mensaje",
+                text: "@Html.Raw(ViewData["Message"])",
+                icon: "info",
+                buttons: {
+                    confirm: "Cerrar"
+                }
+            });
+        }
+    </script>
+
+
+    <script>
+        $(function () {
+            $('[data-toggle="popover"]').popover()
+        })
+
+        $(function () {
+            $('#popover-trigger').popover({
+                trigger: 'click',
+                html: true
+            });
+
+            $(document).on('click', function (e) {
+                $('#popover-trigger').each(function () {
+                    // Comprobar si el clic fue fuera del popover
+                    if (!$(this).is(e.target) && $(this).has(e.target).length === 0 && $('.popover').has(e.target).length === 0) {
+                        $(this).popover('hide');
+                    }
+                });
+            });
+        });
+    </script>
+
+</body>
+</html>

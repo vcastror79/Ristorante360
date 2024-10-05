@@ -1,0 +1,165 @@
+﻿@model Ristorante360Admin.Models.Order;
+
+@{
+    ViewData["Title"] = "Detalle de Productos";
+    Layout = "~/Views/Shared/_Layout_General.cshtml";
+}
+
+<div class="content-body">
+    <div class="container-fluid">
+        <div class="row page-titles mx-0">
+            <div class="col-sm-6 p-md-0">
+            </div>
+            <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="javascript:void(0)">Ventas y Pedidos</a></li>
+                    <li class="breadcrumb-item active"><a href="javascript:void(0)">Confirmar Pedido</a></li>
+                </ol>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xl-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-4 order-md-2 mb-4">
+                                <h4 class="d-flex justify-content-between align-items-center mb-3">
+                                    <span class="text-muted">Productos del Pedido</span>
+                                    <span class="badge badge-primary badge-pill">@Model.OrderProducts.Count</span>
+                                </h4>
+                                <ul class="list-group mb-3">
+                                    @foreach (var orderProduct in Model.OrderProducts)
+                                    {
+                                        <li class="list-group-item d-flex justify-content-between lh-condensed">
+                                            <div>
+                                                <h6 class="my-0">@orderProduct.Product.ProductName</h6> @orderProduct.Quantity
+                                                <small class="text-muted">@orderProduct.Product.ProductDescription</small>
+                                            </div>
+                                            <span class="text-muted">₡@orderProduct.Product.Price</span>
+                                        </li>
+                                    }
+                                    <li class="list-group-item d-flex justify-content-between">
+                                        <span>Total (CRC)</span>
+                                        <strong>₡@Model.TotalAmount</strong>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="col-md-8 order-md-1">
+                                <h4 class="mb-3">Información del pedido</h4>
+                                <form asp-action="CompletarOrden" asp-controller="VentasPedidos" class="needs-validation" novalidate="">
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="firstName">Cliente</label>
+                                            <div class="input-group">
+                                                <input asp-for="@Model.Client.FullName" type="text" class="form-control" id="firstName" placeholder="" value="" required="">
+                                                <div class="input-group-append">
+                                                    <button class="btn btn-primary" type="button" data-toggle="modal" data-target="#searchClientModal">Buscar</button>
+                                                </div>
+                                            </div>
+                                            <div class="invalid-feedback">
+                                                Por favor ingrese el nombre del cliente.
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="lastName">Número de teléfono</label>
+                                            <input asp-for="@Model.Client.PhoneNumber" type="text" class="form-control" id="lastName" placeholder="" value="" required="">
+                                            <div class="invalid-feedback">
+                                                Por favor ingrese un número de teléfono válido (8 dígitos numéricos).
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="email">Correo Electrónico <span class="text-muted">(Opcional)</span></label>
+                                        <input asp-for="@Model.Client.Email" type="email" class="form-control" id="email" placeholder="elchante@correo.com">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="address">Dirección</label>
+                                        <input asp-for="@Model.Client.Address" type="text" class="form-control" id="address" placeholder="" required="">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label asp-for="OrderSpecifications">Especificaciones de la entrega <span class="text-muted">(Opcional)</span></label>
+                                        <input asp-for="OrderSpecifications" type="text" class="form-control" id="address2" placeholder="">
+                                    </div>
+
+                                    <input type="hidden" asp-for="OrderDate">
+                                    <input type="hidden" asp-for="OrderId">
+
+                                    <hr class="mb-4">
+                                    <h4 class="mb-3">Forma de Pago</h4>
+                                    <div class="d-block my-3">
+                                        <div class="custom-control custom-radio">
+                                            <input asp-for="PaymentMethodId" id="credit" name="PaymentMethodId" type="radio" class="custom-control-input" value="1" required>
+                                            <label class="custom-control-label" for="credit">Tarjeta Crédito/Débito</label>
+                                        </div>
+                                        <div class="custom-control custom-radio">
+                                            <input asp-for="PaymentMethodId" id="debit" name="PaymentMethodId" type="radio" class="custom-control-input" value="2" required>
+                                            <label class="custom-control-label" for="debit">Efectivo</label>
+                                        </div>
+                                        <div class="custom-control custom-radio">
+                                            <input asp-for="PaymentMethodId" id="paypal" name="PaymentMethodId" type="radio" class="custom-control-input" value="3" required>
+                                            <label class="custom-control-label" for="paypal">Sinpe</label>
+                                        </div>
+                                    </div>
+
+                                    <hr class="mb-4">
+                                    <h4 class="mb-3">Tipo de Orden</h4>
+                                    <div class="d-block my-3">
+                                        <div class="custom-control custom-radio">
+                                            <input asp-for="OrderTypeId" id="express" name="OrderTypeId" type="radio" class="custom-control-input" value="1" required>
+                                            <label class="custom-control-label" for="express">Express</label>
+                                        </div>
+                                        <div class="custom-control custom-radio">
+                                            <input asp-for="OrderTypeId" id="takeaway" name="OrderTypeId" type="radio" class="custom-control-input" value="2" required>
+                                            <label class="custom-control-label" for="takeaway">Para Llevar</label>
+                                        </div>
+                                    </div>
+
+                                    <hr class="mb-4">
+                                    <button class="btn btn-primary btn-lg btn-block" type="submit">Confirmar Pedido</button>
+                                </form>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="searchClientModal" tabindex="-1" role="dialog" aria-labelledby="searchClientModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="searchClientModalLabel">Buscar Cliente</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <input type="text" class="form-control mb-3" id="searchClientInput" placeholder="Buscar cliente...">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre</th>
+                            <th>Número de teléfono</th>
+                            <!-- Agrega más columnas si necesitas mostrar más información -->
+                        </tr>
+                    </thead>
+                    <tbody id="searchClientResults">
+                        <!-- Aquí se agregarán los resultados de la búsqueda -->
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/vendor/highlightjs/highlight.pack.min.js"></script>
+<script src="~/vendor/apexchart/apexchart.js"></script>
+
+<script src="~/js/customscripts/ventaspedidoscrtl.js"></script>

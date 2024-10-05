@@ -1,0 +1,162 @@
+﻿@model List<Ristorante360Admin.Models.User>
+
+@{
+    ViewData["Title"] = "Administrar usuarios";
+
+    Layout = "~/Views/Shared/_Layout_General.cshtml";
+}
+
+<div class="content-body">
+    <div class="container-fluid">
+        <div class="row page-titles mx-0">
+            <div class="col-sm-6 p-md-0">
+                <div class="welcome-text">
+                    <h4>Usuarios El Chante</h4>
+                </div>
+            </div>
+
+        </div>
+        <!-- row -->
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">Administración de Usuarios</h4>
+                        <div class="btn-group" role="group" aria-label="Opciones de usuarios">
+                            <a class="btn btn-success btn-sm" asp-controller="Admin" asp-action="UserCreate">Crear Usuario</a>
+                            @if (ViewData.ContainsKey("statusId") && ViewData["statusId"] != null)
+                            {
+                                bool statusId = (bool)ViewData["statusId"];
+                                if (statusId)
+                                {
+                                    <a class="btn light btn-secondary btn-sm" asp-controller="Admin" asp-action="UserAdmin" asp-route-statusId="false">Usuarios inactivos</a>
+                                }
+                                else
+                                {
+                                    <a class="btn light btn-success btn-sm" asp-controller="Admin" asp-action="UserAdmin" asp-route-statusId="true">Usuarios activos</a>
+                                }
+                            }
+
+                        </div>
+
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table id="example" class="display nowrap table table-striped" style="width:100%">
+                                <thead class="bg-info">
+                                    <tr>
+                                        <th><strong>Nombre</strong></th>
+                                        <th><strong>Apellidos</strong></th>
+                                        <th><strong>Correo Electronico</strong></th>
+                                        <th><strong>Rol</strong></th>
+                                        <th><strong>Acción</strong></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var usuario in Model)
+                                    {
+                                        <tr>
+                                            <td>@usuario.Name</td>
+                                            <td>@usuario.Surname</td>
+                                            <td>@usuario.Email</td>
+                                            <td>@usuario.oRole.RoleName</td>
+                                            <td>
+                                                <div class="dropdown">
+                                                    <button type="button" class="btn btn-success light sharp" data-toggle="dropdown">
+                                                        <svg width="20px" height="20px" viewBox="0 0 24 24" version="1.1"><g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><rect x="0" y="0" width="24" height="24" /><circle fill="#000000" cx="5" cy="12" r="2" /><circle fill="#000000" cx="12" cy="12" r="2" /><circle fill="#000000" cx="19" cy="12" r="2" /></g></svg>
+                                                    </button>
+                                                    <div class="dropdown-menu">
+
+                                                        @if (ViewData.ContainsKey("statusId") && ViewData["statusId"] != null)
+                                                        {
+                                                            bool statusId = (bool)ViewData["statusId"];
+                                                            if (statusId)
+                                                            {
+
+                                                                <a class="dropdown-item" asp-controller="Admin" asp-action="UserCreate" asp-route-UserId="@usuario.UserId">Editar</a>
+                                                                <a class="dropdown-item delete-user" data-toggle="modal" data-target="#exampleModalCenter"
+                                                                   data-userid-modal="@usuario.UserId" data-name-modal="@usuario.Name"
+                                                                   data-surname-modal="@usuario.Surname" data-email-modal="@usuario.Email"
+                                                                   data-url-modal="/Admin/UserDelete">Eliminar</a>
+                                                            }
+                                                            else
+                                                            {
+                                                                <form method="post" asp-controller="Admin" asp-action="UserDelete">
+                                                                    <input type="hidden" name="userId" value="@usuario.UserId" />
+                                                                    <button type="submit" class="dropdown-item">Habilitar</button>
+                                                                </form>
+                                                            }
+
+
+                                                        }
+
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>╠
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!--Modal para eliminar usuario-->
+<div class="modal fade" id="exampleModalCenter">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">¿Está seguro de eliminar el empleado?</h5>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <label>Información del empleado</label>
+                <h4 id="productName"></h4>
+                <h4> Nombre completo:</h4>
+                <p id="name"></p>
+                <h4>Correo Electronico: </h4>
+                <p id="email"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary light" id="confirmDelete">Confirmar</button>
+                <button type="button" class="btn btn-danger light" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!--Scripts de la vista-->
+
+<script src="~/js/customscripts/usermodal.js"></script>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
+
+<script>
+    var js = jQuery.noConflict(true);
+    js(document).ready(function () {
+        js('#example').DataTable({
+            "language": {
+                "url": "//cdn.datatables.net/plug-ins/1.10.25/i18n/Spanish.json"
+            },
+            responsive: true
+        });
+    });
+</script>
+
+
+<style>
+    div.container {
+        max-width: 1200px
+    }
+</style>
+

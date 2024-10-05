@@ -1,0 +1,164 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout_General.cshtml";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- Agrega la referencia a la biblioteca de Moment.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+
+    <!-- Agrega la referencia a la biblioteca de Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</head>
+
+<body>
+    <!-- Agrega el contenido del layout -->
+    <div class="content-body">
+        <div class="container-fluid">
+            <div class="row page-titles mx-0">
+                <!-- Código de la barra de navegación, si lo tienes -->
+            </div>
+
+            <div class="row">
+                <!-- Código de los otros gráficos -->
+            </div>
+
+            <!-- Agrega un nuevo contenedor para el gráfico de Cantidad en inventario y Nivel mínimo de inventario -->
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card chart-card-container">
+                        <div class="card-header">
+                            <h4 class="card-title">Gráfico de Inventario y Nivel Mínimo de Inventario</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-container" style="position: relative; height: 300px; width: 100%;">
+                                <canvas id="combinedChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Fin del nuevo contenedor para el gráfico de Cantidad en inventario y Nivel mínimo de inventario -->
+            <!-- Agregar el nuevo contenedor para el gráfico de Distribución del inventario por unidad -->
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card chart-card-container">
+                        <div class="card-header">
+                            <h4 class="card-title">Gráfico de Distribución del Inventario por Unidad</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-container" style="position: relative; height: 300px; width: 100%;">
+                                <canvas id="unitChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Fin del nuevo contenedor para el gráfico de Distribución del inventario por unidad -->
+            
+        </div>
+    </div>
+
+    <!-- Agrega el script para los gráficos de Cantidad en inventario y Nivel mínimo de inventario -->
+    <script>
+        // Recuperar los datos del inventario pasados por el controlador para el gráfico de Cantidad en inventario
+        var chartData = @Html.Raw(Json.Serialize(ViewData["ChartData"]));
+
+        // Recuperar los datos del inventario pasados por el controlador para el gráfico de Nivel mínimo de inventario
+        var minInventoryChartData = @Html.Raw(Json.Serialize(ViewData["MinInventoryChartData"]));
+
+        // Configuración de los gráficos
+        var options = {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: { y: { beginAtZero: true } }
+        };
+
+        // Actualizar el color de las barras para el gráfico de Cantidad en inventario
+        var chartBackgroundColor = chartData.datasets[0].data.map(function (value, index) {
+            return value <= minInventoryChartData.datasets[0].data[index] ? "rgba(255, 0, 0, 0.8)" : "rgba(75, 192, 192, 0.2)";
+        });
+
+        var ctx = document.getElementById('combinedChart').getContext('2d');
+        var combinedChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: chartData.labels,
+                datasets: [
+                    {
+                        label: "Cantidad en inventario",
+                        backgroundColor: chartBackgroundColor,
+                        borderColor: "rgba(75, 192, 192, 1)",
+                        borderWidth: 1,
+                        data: chartData.datasets[0].data,
+                    },
+                    {
+                        label: "Nivel mínimo de inventario",
+                        backgroundColor: minInventoryChartData.datasets[0].data.map(function (value) {
+                            return value <= 0 ? "rgba(255, 0, 0, 0.2)" : "rgba(255, 99, 132, 0.2)";
+                        }),
+                        borderColor: minInventoryChartData.datasets[0].data.map(function (value) {
+                            return value <= 0 ? "rgba(255, 0, 0, 1)" : "rgba(255, 99, 132, 1)";
+                        }),
+                        borderWidth: 1,
+                        data: minInventoryChartData.datasets[0].data,
+                    },
+                ],
+            },
+            options: options,
+        });
+    </script>
+
+
+    </script>
+    <!-- Agrega el script para el gráfico de distribución del inventario por unidad -->
+    <script>
+        // Recuperar los datos de distribución del inventario por unidad pasados por el controlador
+        var unitChartData = @Html.Raw(Json.Serialize(ViewData["UnitChartData"]));
+
+        // Configuración del gráfico de pastel de distribución del inventario por unidad
+        var unitOptions = {
+            responsive: true, // Hace que el gráfico se adapte al tamaño del contenedor
+            maintainAspectRatio: false, // Permite mantener el aspect ratio
+            scales: {
+                y: {
+                    beginAtZero: true // Comienza el eje y en 0
+                }
+            }
+            // Puedes agregar más opciones de configuración según tus necesidades
+        };
+
+        var ctxUnit = document.getElementById('unitChart').getContext('2d');
+        var unitChart = new Chart(ctxUnit, {
+            type: 'pie', // Cambia 'bar' por 'pie' para crear un gráfico de pastel
+            data: {
+                labels: unitChartData.labels,
+                datasets: [
+                    {
+                        label: 'Distribución del inventario por unidad',
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.2)',
+                            'rgba(54, 162, 235, 0.2)',
+                            'rgba(255, 206, 86, 0.2)',
+                            // Agregar más colores de fondo para cada unidad si hay más unidades
+                        ],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            // Agregar más colores de borde para cada unidad si hay más unidades
+                        ],
+                        borderWidth: 1,
+                        data: unitChartData.datasets[0].data,
+                    }
+                ],
+            },
+            options: unitOptions,
+        });
+    </script>
+
+   
+</body>
+</html>

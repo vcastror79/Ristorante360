@@ -1,0 +1,61 @@
+﻿@{
+    ViewData["Title"] = "Entradas";
+    Layout = "~/Views/Shared/_Layout_General.cshtml";
+}
+
+
+<div class="content-body">
+    <div class="container-fluid">
+        <div class="row page-titles mx-0">
+            <div class="col-sm-6 p-md-0">
+                <div class="welcome-text">
+                    <h4>Añadir entrada de producto</h4>
+                    <span>Productos</span>
+                </div>
+            </div>
+            <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="javascript:void(0)">Inventario</a></li>
+                    <li class="breadcrumb-item active"><a href="javascript:void(0)">Entrada</a></li>
+                </ol>
+
+            </div>
+
+        </div>
+
+        <form>
+            <div class="form-group">
+                <label for="categoria">Código:</label>
+                <select id="categoria" name="categoria" class="form-control">
+                    <option value="">Selecciona...</option>
+                    <option value="categoria1">H-01</option>
+                    <option value="categoria2">P-01</option>
+                    <option value="categoria3">P-02</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="nombre">Cantidad:</label>
+                <input type="number" id="precio" name="nombre" class="form-control">
+            </div>
+
+            <div class="form-group">
+                <label for="descripcion">Fecha:</label>
+                <input type="date" id="descripcion" name="descripcion" class="form-control">
+            </div>
+
+
+            <button type="submit" class="btn btn-primary">Guardar cambios</button>
+        </form>
+    </div>
+
+</div>
+
+
+<script src="~/vendor/bootstrap-select/dist/js/bootstrap-select.min.js"></script>
+<script src="~/js/custom.min.js"></script>
+<script src="~/js/deznav-init.js"></script>
+
+<!-- Datatable -->
+<script src="~/vendor/datatables/js/jquery.dataTables.min.js"></script>
+<script src="~/js/plugins-init/datatables.init.js"></script>

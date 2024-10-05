@@ -12,12 +12,12 @@ namespace Ristorante360Admin.Controllers
     [Authorize]
     public class ClientesController : Controller
     {
-        private readonly RistoranteContext _ristoranteContext; // Asegúrate de usar este nombre consistentemente
+        private readonly ApplicationDbContext _ristoranteContext; // Asegúrate de usar este nombre consistentemente
         private readonly ILogService _logService;
         private readonly IErrorLoggingService _errorLoggingService;
 
         // Constructor corregido
-        public ClientesController(RistoranteContext ristoranteContext, ILogService logService, IErrorLoggingService errorLoggingService)
+        public ClientesController(ApplicationDbContext ristoranteContext, ILogService logService, IErrorLoggingService errorLoggingService)
         {
             _ristoranteContext = ristoranteContext; // Corregir la asignación, asegurarse de usar el nombre correcto
             _logService = logService;

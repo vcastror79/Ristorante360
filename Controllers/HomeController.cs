@@ -9,16 +9,16 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Ristorante360Admin.Services.Contract;
 
-namespace Ristorante360.Controllers
+namespace Ristorante360Admin.Controllers
 {
     [Authorize]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly RistoranteContext _ristoranteContext;
+        private readonly ApplicationDbContext _ristoranteContext;
         private readonly IErrorLoggingService _errorLoggingService;
 
-        public HomeController(ILogger<HomeController> logger, RistoranteContext ristorante360Context, IErrorLoggingService errorLoggingService)
+        public HomeController(ILogger<HomeController> logger, ApplicationDbContext ristorante360Context, IErrorLoggingService errorLoggingService)
         {
             _ristoranteContext = ristorante360Context;
             _logger = logger;

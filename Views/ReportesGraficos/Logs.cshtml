@@ -1,0 +1,104 @@
+﻿@model List<Ristorante360Admin.Models.Log>
+
+@{
+    ViewData["Title"] = "Registro de Actividad";
+    Layout = "~/Views/Shared/_Layout_General.cshtml";
+}
+
+<div class="content-body">
+    <div class="container-fluid">
+        <div class="row page-titles mx-0">
+            <div class="col-sm-6 p-md-0">
+                <div class="welcome-text">
+                    <h4>
+                        Registro de Actividad
+                    </h4>
+                    <span>Actividad</span>
+                </div>
+            </div>
+            <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="javascript:void(0)">Logs</a></li>
+                    <li class="breadcrumb-item active"><a href="javascript:void(0)">Ver logs</a></li>
+                </ol>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">Registro de actividad</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table id="LogTable" class="display nowrap table table-striped" style="width:100%">
+                                <thead class="bg-info">
+                                    <tr>
+                                        <th>Identificador</th>
+                                        <th>Modulo</th>
+                                        <th>Detalle</th>
+                                        <th>Fecha de registro</th>
+                                        <th>Usuario ID</th>
+                                        <th>Usuario Acción</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var log in Model)
+                                    {
+                                        <tr>
+                                            <td>@log.LogId</td>
+                                            <td>@log.Module</td>
+                                            <td>@log.Detail</td>
+                                            <td>@log.LogDate</td>
+                                            <td>@log.User.UserId</td>
+                                            <td>@(log.User.Name + " " + log.User.Surname)</td>
+                                        </tr>
+
+                                    }
+
+                                </tbody>
+
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- Required vendors -->
+<script src="~/vendor/bootstrap-select/dist/js/bootstrap-select.min.js"></script>
+<script src="~/js/custom.min.js"></script>
+<script src="~/js/deznav-init.js"></script>
+
+<!-- Datatable -->
+<script src="~/vendor/datatables/js/jquery.dataTables.min.js"></script>
+<script src="~/js/plugins-init/datatables.init.js"></script>
+
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
+
+<script>
+    var js = jQuery.noConflict(true);
+    js(document).ready(function () {
+        js('#LogTable').DataTable({
+            "language": {
+                "url": "//cdn.datatables.net/plug-ins/1.10.25/i18n/Spanish.json"
+            },
+            responsive: true
+        });
+    });
+</script>
+
+
+<style>
+    div.container {
+        max-width: 1200px
+    }
+</style>

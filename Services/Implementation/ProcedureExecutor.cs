@@ -6,9 +6,9 @@ namespace Ristorante360Admin.Services.Implementation
 {
     public class ProcedureExecutor
     {
-        private readonly RistoranteContext _ristoranteContext;
+        private readonly ApplicationDbContext _ristoranteContext;
 
-        public ProcedureExecutor(RistoranteContext ristoranteContext)
+        public ProcedureExecutor(ApplicationDbContext ristoranteContext)
         {
             _ristoranteContext = ristoranteContext;
         }

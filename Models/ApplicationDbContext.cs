@@ -3,18 +3,15 @@ using System.Collections.Generic;
 using Ristorante360Admin.Models;
 using Microsoft.EntityFrameworkCore;
 
-//using static System.Runtime.InteropServices.JavaScript.JSType;
-//using System.Data;
-
 namespace Ristorante360Admin.Models;
 
-public partial class RistoranteContext : DbContext
+public partial class ApplicationDbContext : DbContext
 {
-    public RistoranteContext()
+    public ApplicationDbContext()
     {
     }
 
-    public RistoranteContext(DbContextOptions<RistoranteContext> options)
+    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
         : base(options)
     {
     }
@@ -28,6 +25,8 @@ public partial class RistoranteContext : DbContext
     public virtual DbSet<Inventory> Inventories { get; set; }
 
     public virtual DbSet<Log> Logs { get; set; }
+
+    public virtual DbSet<Notification> Notifications { get; set; }
 
     public virtual DbSet<Order> Orders { get; set; }
 
@@ -46,10 +45,11 @@ public partial class RistoranteContext : DbContext
     public virtual DbSet<SuppliesForProduct> SuppliesForProducts { get; set; }
 
     public virtual DbSet<Supply> Supplies { get; set; }
+
     public virtual DbSet<UnitType> UnitTypes { get; set; }
 
     public virtual DbSet<User> Users { get; set; }
-    public virtual DbSet<Notification> Notifications { get; set; }
+
 
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

@@ -1,0 +1,66 @@
+﻿@{
+    ViewData["Title"] = "Reporte Ventas";
+    Layout = "~/Views/Shared/_Layout_General.cshtml";
+}
+
+
+<div class="content-body">
+    <div class="container-fluid">
+        <div class="row page-titles mx-0">
+            <div class="col-sm-6 p-md-0">
+                <div class="welcome-text">
+                    <h4>Añadir entrada de producto</h4>
+                    <span>Productos</span>
+                </div>
+            </div>
+            <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="javascript:void(0)">Inventario</a></li>
+                    <li class="breadcrumb-item active"><a href="javascript:void(0)">Entrada</a></li>
+                </ol>
+            </div>
+            <div>
+                <body>
+                    <form>
+                        <label for="date-selector">Seleccione una opción:</label>
+                        <select id="date-selector" name="date-selector" onchange="showDatePicker()">
+                            <option value="">Seleccione una opción</option>
+                            <option value="day">Día</option>
+                            <option value="week">Semana</option>
+                            <option value="month">Mes</option>
+                            <option value="year">Año</option>
+                        </select>
+                        <div id="date-picker-container"></div>
+                        <button type="button" class="btn btn-dark" onclick="reporteVentas()">Generar</button>
+                    </form>
+
+                    <script>
+                        function showDatePicker() {
+                            var selector = document.getElementById("date-selector");
+                            var value = selector.value;
+
+                            var datePickerContainer = document.getElementById("date-picker-container");
+
+                            if (value == "day") {
+                                datePickerContainer.innerHTML = '<label for="day-picker">Seleccione un día:</label><input type="date" id="day-picker" name="day-picker">';
+                            }
+                            else if (value == "week") {
+                                datePickerContainer.innerHTML = '<label for="week-picker">Seleccione una semana:</label><input type="week" id="week-picker" name="week-picker">';
+                            }
+                            else if (value == "month") {
+                                datePickerContainer.innerHTML = '<label for="month-picker">Seleccione un mes:</label><input type="month" id="month-picker" name="month-picker">';
+                            }
+                            else if (value == "year") {
+                                datePickerContainer.innerHTML = '<label for="year-picker">Seleccione un año:</label><input type="number" id="year-picker" name="year-picker" min="1900" max="2100">';
+                            }
+                            else {
+                                datePickerContainer.innerHTML = '';
+                            }
+                        }
+                    </script>
+                </body>
+            </div>
+        </div>
+    </div>
+</div>
+

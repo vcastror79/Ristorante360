@@ -9,18 +9,19 @@ using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
+
 namespace Ristorante360Admin.Controllers
 {
     [Authorize]
 
     public class InventarioController : Controller
     {
-        private readonly RistoranteContext _ristoranteContext;
+        private readonly ApplicationDbContext _ristoranteContext;
         private readonly ProcedureExecutor _procedureExecutor;
         private readonly ILogService _logService;
         private readonly IErrorLoggingService _errorLoggingService;
 
-        public InventarioController(RistoranteContext ristoranteContext, ProcedureExecutor procedureExecutor, ILogService logService, IErrorLoggingService errorLoggingService)
+        public InventarioController(ApplicationDbContext ristoranteContext, ProcedureExecutor procedureExecutor, ILogService logService, IErrorLoggingService errorLoggingService)
         {
             _ristoranteContext = ristoranteContext;
             _procedureExecutor = procedureExecutor;

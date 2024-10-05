@@ -1,14 +1,17 @@
-﻿using Ristorante360Admin.Models;
-using Ristorante360Admin.Models.ViewModels;
-using Ristorante360Admin.Services.Contract;
-using Ristorante360Admin.Services.Implementation;
+﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using System.Security.Claims;
+using SixLabors.ImageSharp; // Asegúrate de que esta referencia esté presente
+using SixLabors.ImageSharp.Formats;
+using SixLabors.ImageSharp.Processing; // Para Mutate y Resize
+using Ristorante360Admin.Models;
+using Ristorante360Admin.Models.ViewModels; // Para manejar formatos de imagen
+using Ristorante360Admin.Services.Contract;
+using Ristorante360Admin.Services.Implementation;
 
 namespace Ristorante360Admin.Controllers
 {
@@ -16,12 +19,12 @@ namespace Ristorante360Admin.Controllers
     public class ProductosController : Controller
     {
 
-        private readonly RistoranteContext _ristoranteContext;
+        private readonly ApplicationDbContext _ristoranteContext;
         private readonly IWebHostEnvironment webHostEnvironment;
         private readonly ILogService _logService;
         private readonly IErrorLoggingService _errorLoggingService;
 
-        public ProductosController(RistoranteContext ristorante360Context, IWebHostEnvironment hostEnvironment, ILogService logService, IErrorLoggingService errorLoggingService)
+        public ProductosController(ApplicationDbContext ristorante360Context, IWebHostEnvironment hostEnvironment, ILogService logService, IErrorLoggingService errorLoggingService)
         {
             _ristoranteContext = ristorante360Context;
             webHostEnvironment = hostEnvironment;
@@ -336,7 +339,8 @@ namespace Ristorante360Admin.Controllers
                     uniqueFileName = Guid.NewGuid().ToString() + "_" + oProductVM.oProduct.ImageFile.FileName;
                     string filepath = Path.Combine(imageUploadedFolder, uniqueFileName);
 
-                    using (var image = Image.Load(oProductVM.oProduct.ImageFile.OpenReadStream()))
+                    // Declara explícitamente el tipo de la imagen
+                    using (Image image = Image.Load(oProductVM.oProduct.ImageFile.OpenReadStream()))
                     {
                         image.Mutate(x => x.Resize(new ResizeOptions
                         {
@@ -344,7 +348,7 @@ namespace Ristorante360Admin.Controllers
                             Mode = ResizeMode.Crop
                         }));
 
-                        image.Save(filepath);
+                        image.Save(filepath); // Guarda la imagen en el filepath
                     }
 
                     oProductVM.oProduct.Image = uniqueFileName;
