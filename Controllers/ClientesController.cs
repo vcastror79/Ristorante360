@@ -16,10 +16,10 @@ namespace Ristorante360Admin.Controllers
         private readonly ILogService _logService;
         private readonly IErrorLoggingService _errorLoggingService;
 
-        // Constructor corregido
+        // Constructor modificado
         public ClientesController(ApplicationDbContext ristoranteContext, ILogService logService, IErrorLoggingService errorLoggingService)
         {
-            _ristoranteContext = ristoranteContext; // Corregir la asignación, asegurarse de usar el nombre correcto
+            _ristoranteContext = ristoranteContext; 
             _logService = logService;
             _errorLoggingService = errorLoggingService;
         }

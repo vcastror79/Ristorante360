@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Data.Common;
 using Newtonsoft.Json;
+using Microsoft.AspNetCore.Identity;//nuevo
 
 
 namespace Ristorante360Admin.Controllers
@@ -43,6 +44,41 @@ namespace Ristorante360Admin.Controllers
             return View();
         }
 
+
+
+        //temporal
+
+        [HttpGet]
+        public IActionResult GenerarHash(string nuevaContrasena)
+        {
+            if (string.IsNullOrEmpty(nuevaContrasena))
+            {
+                return Content("Por favor, proporciona una nueva contraseña como parámetro en la URL.");
+            }
+
+            string hashContrasena = Utilities.EncryptKey(nuevaContrasena);
+            return Content($"El hash de la contraseña '{nuevaContrasena}' es: {hashContrasena}");
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         [HttpPost]
         public async Task<IActionResult> Login(UserLoginVM user)
         {
@@ -53,34 +89,27 @@ namespace Ristorante360Admin.Controllers
                     return View();
                 }
 
-                var userNew = await _ristoranteContext.Users.FirstOrDefaultAsync(u => u.Email == user.Email && u.RoleId == 3);
-
-                if (userNew != null)
-                {
-                    var userJson = JsonConvert.SerializeObject(user);
-                    TempData["UserData"] = userJson;
-
-
-                    return RedirectToAction("Register", "User");
-                }
-
-                User user_found = await _userService.GetUser(user.Email, Utilities.EncryptKey(user.Password));
-
+                // Buscar el usuario por correo electrónico
+                User user_found = await _ristoranteContext.Users.FirstOrDefaultAsync(u => u.Email == user.Email);
                 if (user_found == null)
                 {
                     ViewData["Message"] = "El usuario y/o contraseña son incorrectos.";
                     return View();
                 }
 
-                if (!user_found.Status)
+                // Comparar la contraseña ingresada, encriptada con SHA-256, con la almacenada en la base de datos
+                string encryptedPassword = Utilities.EncryptKey(user.Password);
+
+                if (user_found.Password != encryptedPassword)
                 {
-                    ViewData["Message"] = "Tu cuenta está desactivada. Por favor, contacta al administrador.";
+                    ViewData["Message"] = "El usuario y/o contraseña son incorrectos.";
                     return View();
                 }
 
+                // Autenticar y configurar la sesión
                 string usuarioNombre = user_found.Name;
                 int usuarioRol = user_found.RoleId;
-                int usuarioId = user_found.UserId; // Asegúrate de que la clase User tenga la propiedad UserId
+                int usuarioId = user_found.UserId;
 
                 List<Claim> claims = new List<Claim>()
         {
@@ -121,6 +150,7 @@ namespace Ristorante360Admin.Controllers
                 return View();
             }
         }
+
 
 
         public IActionResult Register()
@@ -223,15 +253,13 @@ namespace Ristorante360Admin.Controllers
                     return View();
                 }
 
-                ModelState.Remove("oRole");
-
+                // Validar modelo
                 if (!ModelState.IsValid)
                 {
-                    // El modelo no es válido, volver a mostrar la vista con los mensajes de error
                     return View(model);
                 }
 
-                // Encriptar la clave en SHA256
+                // Encriptar la clave en SHA-256 antes de guardarla
                 model.Password = Utilities.EncryptKey(model.Password);
 
                 // Guardar el nuevo usuario en la base de datos
@@ -257,9 +285,11 @@ namespace Ristorante360Admin.Controllers
 
                 // Redirigir a una página de error o mostrar un mensaje de error personalizado.
                 ViewData["Message"] = "Ocurrió un error al registrar el usuario.";
-                return View("Error"); // Puedes crear una vista llamada "Error" para mostrar mensajes de error amigables
+                return View("Error");
             }
         }
+
+
 
 
         [HttpGet]

@@ -1,17 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Ristorante360Admin.Models;
-
-public class Notification
+﻿namespace Ristorante360Admin.Models
 {
-    public int NotificationId { get; set; }
-    public int SuppliesId { get; set; }
-    public string NotificationMessage { get; set; }
-    public DateTime CreatedDate { get; set; }
-    public bool IsRead { get; set; }
+    public class Notification
+    {
+        public int NotificationId { get; set; }
+        public int SuppliesId { get; set; }
+        public string NotificationMessage { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public bool IsRead { get; set; }
 
-    // Propiedad de navegación para acceder al objeto de Inventario asociado
-    public Inventory Inventory { get; set; }
+        // Propiedad de navegación para acceder al objeto de Inventario asociado
+        public Inventory Inventory { get; set; }
+    }
 }
+
 

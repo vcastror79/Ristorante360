@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Ristorante360Admin.Models;
 using Microsoft.EntityFrameworkCore;
+using Ristorante360Admin.Models;
 
 namespace Ristorante360Admin.Models;
 
@@ -26,8 +27,6 @@ public partial class ApplicationDbContext : DbContext
 
     public virtual DbSet<Log> Logs { get; set; }
 
-    public virtual DbSet<Notification> Notifications { get; set; }
-
     public virtual DbSet<Order> Orders { get; set; }
 
     public virtual DbSet<OrderProduct> OrderProducts { get; set; }
@@ -45,10 +44,11 @@ public partial class ApplicationDbContext : DbContext
     public virtual DbSet<SuppliesForProduct> SuppliesForProducts { get; set; }
 
     public virtual DbSet<Supply> Supplies { get; set; }
-
     public virtual DbSet<UnitType> UnitTypes { get; set; }
 
     public virtual DbSet<User> Users { get; set; }
+
+    public virtual DbSet<Notification> Notifications { get; set; }
 
 
 
