@@ -104,11 +104,11 @@ public partial class ApplicationDbContext : DbContext
                 .HasColumnType("datetime")
                 .HasColumnName("Date_Time");
             entity.Property(e => e.ErrorMessage)
-                .HasMaxLength(500)
+                .HasMaxLength(4000)
                 .IsUnicode(false)
                 .HasColumnName("Error_Message");
             entity.Property(e => e.ExceptionMessage)
-                .HasMaxLength(500)
+                .HasMaxLength(4000)
                 .IsUnicode(false)
                 .HasColumnName("Exception_Message");
         });
