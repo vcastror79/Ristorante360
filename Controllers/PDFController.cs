@@ -68,7 +68,7 @@ namespace Ristorante_360_Admin.Controllers
             string imagePath = Path.Combine(_hostingEnvironment.WebRootPath, "images", "logoChanteCircular.png");
 
             // Crear una instancia de la clase Image y cargar la imagen desde la ruta
-            iTextSharp.text.Image image = iTextSharp.text.Image.GetInstance(imagePath);
+            iTextSharp.text.Image image = iTextSharp.text.Image.GetInstance(imagePath);///ESTO ESTA DANDO PROBLEMAS TROUBLESHOOT!!!
             image.Alignment = Element.ALIGN_CENTER;
             image.ScaleToFit(150f, 150f); // Ajustar tamaño de la imagen
 

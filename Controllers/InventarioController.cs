@@ -64,6 +64,7 @@ namespace Ristorante360Admin.Controllers
         {
             try
             {
+                // Inicializar el ViewModel
                 InventoryVM oInventoryVM = new InventoryVM()
                 {
                     oInventory = new Inventory(),
@@ -80,24 +81,33 @@ namespace Ristorante360Admin.Controllers
                     }).ToList()
                 };
 
-
+                // Si estamos editando un insumo (inventoryId != 0)
                 if (inventoryId != 0)
                 {
                     oInventoryVM.oInventory = _ristoranteContext.Inventories.Find(inventoryId);
+
+                    // Asegurarse de que los objetos relacionados estén cargados (carga diferida)
+                    if (oInventoryVM.oInventory == null)
+                    {
+                        ViewData["ErrorMessage"] = "Insumo no encontrado.";
+                        return RedirectToAction("ConsultaInventario");
+                    }
                 }
 
+                // Retornar la vista con el ViewModel
                 return View(oInventoryVM);
             }
             catch (Exception ex)
             {
-                string errorMessage = "Ocurrió un error al obtener los datos del usuario.";
+                string errorMessage = "Ocurrió un error al obtener los datos del insumo.";
                 string exceptionMessage = ex.ToString();
                 _errorLoggingService.LogError(errorMessage, exceptionMessage);
 
-                ViewData["ErrorMessage"] = "Ocurrió un error al obtener los datos del usuario. Por favor, inténtelo nuevamente más tarde.";
-                return View(); // Puedes redirigir a una vista de error personalizada si lo deseas
+                ViewData["ErrorMessage"] = "Ocurrió un error al obtener los datos del insumo. Por favor, inténtelo nuevamente más tarde.";
+                return View();
             }
         }
+
 
         [HttpPost]
         public IActionResult AgregarInsumo(InventoryVM oInventoryVM)

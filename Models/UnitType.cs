@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Ristorante360Admin.Models;
+
+[Table("Unit_Type")] // Nombre exacto de la tabla en la base de datos
 
 public partial class UnitType
 {
