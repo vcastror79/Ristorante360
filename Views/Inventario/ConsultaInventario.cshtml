@@ -1,7 +1,7 @@
 ﻿@model List<Ristorante360Admin.Models.Inventory>
 
 @{
-    ViewData["Title"] = "Ristorante 360 - Inventario";
+    ViewData["Title"] = "Ristorante 360 - Control de Inventario";
     Layout = "~/Views/Shared/_Layout_General.cshtml";
     var sweetAlertMessage = TempData["SweetAlert"] as string;
 
@@ -29,7 +29,7 @@
             <div class="col-lg-12">
                 <div class="card">
                     <div class="card-header">
-                        <h4 class="card-title">Administracion de inventario</h4>
+                        <h4 class="card-title">Control de Inventario</h4>
                         <a class="btn btn-success btn-sm" asp-controller="Inventario" asp-action="AgregarInsumo">Añadir Insumo</a>
                         
                         @*Generar PDF*@

@@ -44,7 +44,7 @@ namespace Ristorante360Admin.Services.Implementation
                                 "       <p>Recibimos una solicitud para restablecer tu contraseña en Ristorante 360.</p>" +
                                 "       <p>Haz clic en el siguiente botón para restablecer tu contraseña:</p>" +
                                 "       <div class='button'>" +
-                                "           <a href='" + url + "' style='background-color: #007BFF; color: #fff; padding: 10px 20px; text-decoration: none; border-radius: 5px;'>Recuperar Contraseña</a>" +
+                                "           <a href='" + url + "' style='background-color: #545454; color: #fff; padding: 10px 20px; text-decoration: none; border-radius: 5px;'>Recuperar Contraseña</a>" +
                                 "       </div>" +
                                 "       <p>Si no realizaste esta solicitud, puedes ignorar este correo electrónico.</p>" +
                                 "       <p>Atentamente,<br>El Equipo de Ristorante 360 </p>" +
