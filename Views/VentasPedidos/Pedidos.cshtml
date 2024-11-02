@@ -1,4 +1,4 @@
-﻿@model List<Ristorante360Admin.Models.Order>;
+﻿@model List<Ristorante360Admin.Models.Order>
 
 @{
     ViewData["Title"] = "Pedidos";
@@ -26,84 +26,76 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="row">
-                            @foreach (var orderProduct in Model.OrderBy(s => s.OrderStatusId))
+                            @foreach (var orderProduct in Model?.OrderBy(s => s.OrderStatusId) ?? Enumerable.Empty<Ristorante360Admin.Models.Order>())
                             {
                                 <div class="col-md-4">
-                                    <div class="card order-card status-@orderProduct.OrderStatusId mb-4">
+                                    <div class="card order-card status-@orderProduct?.OrderStatusId mb-4">
                                         <div class="card-body">
-                                            <ul class="nav nav-tabs" id="orderTabs-@orderProduct.OrderId" role="tablist">
+                                            <ul class="nav nav-tabs" id="orderTabs-@orderProduct?.OrderId" role="tablist">
                                                 <li class="nav-item">
-                                                    <a class="nav-link active" id="generalTab-@orderProduct.OrderId" data-toggle="tab" href="#generalContent-@orderProduct.OrderId" role="tab" aria-controls="generalContent-@orderProduct.OrderId" aria-selected="true">Información General</a>
+                                                    <a class="nav-link active" id="generalTab-@orderProduct?.OrderId" data-toggle="tab" href="#generalContent-@orderProduct?.OrderId" role="tab" aria-controls="generalContent-@orderProduct?.OrderId" aria-selected="true">Información General</a>
                                                 </li>
                                                 <li class="nav-item">
-                                                    <a class="nav-link" id="detailsTab-@orderProduct.OrderId" data-toggle="tab" href="#detailsContent-@orderProduct.OrderId" role="tab" aria-controls="detailsContent-@orderProduct.OrderId" aria-selected="false">Detalles del Pedido</a>
+                                                    <a class="nav-link" id="detailsTab-@orderProduct?.OrderId" data-toggle="tab" href="#detailsContent-@orderProduct?.OrderId" role="tab" aria-controls="detailsContent-@orderProduct?.OrderId" aria-selected="false">Detalles del Pedido</a>
                                                 </li>
                                             </ul>
                                             <div class="tab-content mt-3">
-                                                <div class="tab-pane fade show active" id="generalContent-@orderProduct.OrderId" role="tabpanel" aria-labelledby="generalTab-@orderProduct.OrderId">
-                                                    <h5 class="card-title">Pedido: @orderProduct.OrderId</h5>
-                                                    <p class="card-text" style="color:white">Fecha: @orderProduct.OrderDate</p>
-                                                    <p class="card-text">Cliente: @orderProduct.Client.FullName</p>
-                                                    <p class="card-text">Dirección del cliente: @orderProduct.Client.Address</p>
+                                                <div class="tab-pane fade show active" id="generalContent-@orderProduct?.OrderId" role="tabpanel" aria-labelledby="generalTab-@orderProduct?.OrderId">
+                                                    <h5 class="card-title">Pedido: @orderProduct?.OrderId</h5>
+                                                    <p class="card-text" style="color:white">Fecha: @orderProduct?.OrderDate</p>
+                                                    <p class="card-text">Cliente: @orderProduct?.Client?.FullName ?? "Cliente no especificado"</p>
+                                                    <p class="card-text">Dirección del cliente: @orderProduct?.Client?.Address ?? "Dirección no especificada"</p>
                                                     <p class="card-text">
                                                         Estado:
-                                                        @if (orderProduct.OrderStatusId == 1)
+                                                        @if (orderProduct?.OrderStatusId == 1)
                                                         {
                                                             <span class="badge badge-primary">Registrado</span>
                                                         }
-                                                        else if (orderProduct.OrderStatusId == 2)
+                                                        else if (orderProduct?.OrderStatusId == 2)
                                                         {
                                                             <span class="badge badge-warning">Preparando</span>
                                                         }
-                                                        else if (orderProduct.OrderStatusId == 3)
+                                                        else if (orderProduct?.OrderStatusId == 3)
                                                         {
                                                             <span class="badge badge-success">Completado <span class="ml-1 fa fa-check"></span></span>
                                                         }
                                                         else
                                                         {
                                                             <span class="badge badge-danger">Cancelado</span>
-
                                                         }
                                                     </p>
-                                                    <p class="card-text text-right">Monto: ₡@orderProduct.TotalAmount</p>
+                                                    <p class="card-text text-right">Monto: ₡@orderProduct?.TotalAmount</p>
                                                 </div>
-                                                <div class="tab-pane fade" id="detailsContent-@orderProduct.OrderId" role="tabpanel" aria-labelledby="detailsTab-@orderProduct.OrderId">
-                                                    <h5>Productos del Pedido: @orderProduct.OrderId</h5>
+                                                <div class="tab-pane fade" id="detailsContent-@orderProduct?.OrderId" role="tabpanel" aria-labelledby="detailsTab-@orderProduct?.OrderId">
+                                                    <h5>Productos del Pedido: @orderProduct?.OrderId</h5>
                                                     <ul>
-                                                        @foreach (var product in orderProduct.OrderProducts)
+                                                        @foreach (var product in orderProduct?.OrderProducts ?? Enumerable.Empty<Ristorante360Admin.Models.OrderProduct>())
                                                         {
-                                                            <p class="card-text"> @product.Product.ProductName x @product.Quantity</p>
-
-                                                            <!-- Agrega aquí cualquier otra información relevante del producto -->
+                                                            <p class="card-text"> @product?.Product?.ProductName ?? "Producto no especificado" x @product?.Quantity</p>
                                                         }
-
                                                     </ul>
                                                     <h5>Especificaciones</h5>
-
-                                                    <p class="card-text">@orderProduct.OrderSpecifications</p>
-
+                                                    <p class="card-text">@orderProduct?.OrderSpecifications ?? "No especificado"</p>
                                                 </div>
-
                                             </div>
 
                                             <!-- Dropdown dentro del card -->
-                                            @if (orderProduct.OrderStatusId != 3 && orderProduct.OrderStatusId != 4)
+                                            @if (orderProduct?.OrderStatusId != 3 && orderProduct?.OrderStatusId != 4)
                                             {
                                                 <div class="dropdown text-sans-serif text-right">
-                                                    <button class="btn btn-success light sharp" type="button" id="order-dropdown-@orderProduct.OrderId" data-toggle="dropdown" data-boundary="viewport" aria-haspopup="true" aria-expanded="false">
+                                                    <button class="btn btn-success light sharp" type="button" id="order-dropdown-@orderProduct?.OrderId" data-toggle="dropdown" data-boundary="viewport" aria-haspopup="true" aria-expanded="false">
                                                         <span><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="18px" height="18px" viewBox="0 0 24 24" version="1.1"><g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><rect x="0" y="0" width="24" height="24"></rect><circle fill="#000000" cx="5" cy="12" r="2"></circle><circle fill="#000000" cx="12" cy="12" r="2"></circle><circle fill="#000000" cx="19" cy="12" r="2"></circle></g></svg></span>
                                                     </button>
-                                                    <div class="dropdown-menu dropdown-menu-right border py-0" aria-labelledby="order-dropdown-@orderProduct.OrderId">
+                                                    <div class="dropdown-menu dropdown-menu-right border py-0" aria-labelledby="order-dropdown-@orderProduct?.OrderId">
                                                         <div class="py-2">
                                                             @foreach (var status in ViewBag.OrderStatuses)
                                                             {
-                                                                <a class="dropdown-item" data-orderid="@orderProduct.OrderId" data-statusid="@status.Key">@status.Value</a>
+                                                                <a class="dropdown-item" data-orderid="@orderProduct?.OrderId" data-statusid="@status.Key">@status.Value</a>
                                                             }
                                                         </div>
                                                     </div>
                                                 </div>
                                             }
-                                            
                                         </div>
                                     </div>
                                 </div>
@@ -116,9 +108,6 @@
     </div>
 </div>
 
-
-
-
 <!-- Required vendors -->
 <script src="~/vendor/bootstrap-select/dist/js/bootstrap-select.min.js"></script>
 <script src="~/vendor/chart.js/Chart.bundle.min.js"></script>
@@ -126,11 +115,7 @@
 <script src="~/js/deznav-init.js"></script>
 <!-- Apex Chart -->
 <script src="~/vendor/apexchart/apexchart.js"></script>
-
 <script src="~/vendor/highlightjs/highlight.pack.min.js"></script>
-<!-- Circle progress -->
-
-
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>
@@ -143,7 +128,7 @@
                 type: 'POST',
                 data: { orderId: orderId, statusId: statusId },
                 success: function () {
-                    location.reload(); // Recargar la página después de la actualización
+                    location.reload();
                 },
                 error: function () {
                     alert('Error al actualizar el estado');
@@ -153,10 +138,7 @@
     });
 </script>
 
-
-
 <style>
-
     .order-card {
         border: 1px solid #f2f2f2;
         border-radius: 8px;
@@ -190,21 +172,20 @@
             font-size: 14px;
         }
 
-        /* Colores de los estados */
         .order-card.status-1 {
-            background-color: #17a2b8; /* Color para estado "Registrado" */
+            background-color: #17a2b8;
         }
 
         .order-card.status-2 {
-            background-color: #ffc107; /* Color para estado "Preparando" */
+            background-color: #ffc107;
         }
 
         .order-card.status-3 {
-            background-color: #28a745; /* Color para estado "Completado" */
+            background-color: #28a745;
         }
 
         .order-card.status-4 {
-            background-color: #FF0000; /* Color para estado "Cancelado" */
+            background-color: #FF0000;
         }
 </style>
 
@@ -215,29 +196,19 @@
 
 @if (orderCompleted && orderId.HasValue && orderId.Value > 0)
 {
-    <!-- SweetAlert CSS -->
     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.css" rel="stylesheet" />
-
-    <!-- SweetAlert JS -->
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            var orderId = @orderId; // Asegúrate de que orderId esté definido en tu contexto de JavaScript
-
+            var orderId = @orderId;
             if (orderId) {
                 swal({
                     title: 'Pedido registrado correctamente!',
                     text: 'La orden #' + orderId + ' fue registrada correctamente.',
                     icon: "success",
-                    timer: 3000, // Duración en milisegundos que se mostrará el mensaje (3 segundos en este caso)
+                    timer: 3000,
                     buttons: {
-                        confirm: {
-                            text: "Cerrar",
-                            value: true,
-                            visible: true,
-                            className: "",
-                            closeModal: true,
-                        }
+                        confirm: { text: "Cerrar", value: true, visible: true, className: "", closeModal: true }
                     }
                 });
             }

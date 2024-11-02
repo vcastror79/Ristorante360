@@ -86,44 +86,35 @@ namespace PruebaRistorante360.Controllers
         }
 
 
-
-        [HttpGet]
         public IActionResult Pedidos()
         {
             try
             {
                 DateTime oneDayAgo = DateTime.Now.AddDays(-1);
 
+                // Obtén las órdenes de la base de datos, asegurándote de que la lista no sea null
                 var ordersWithClientsAndProducts = _ristorante360Context.Orders
                     .Include(o => o.Client)
-                    .Include(o => o.OrderProducts) // Cargar los productos asociados a cada pedido
-                    .ThenInclude(op => op.Product) // Cargar la información del producto
+                    .Include(o => o.OrderProducts)
+                    .ThenInclude(op => op.Product)
                     .Where(o => o.OrderStatusId == 1 || o.OrderStatusId == 2 ||
                            (o.OrderStatusId == 3 || o.OrderStatusId == 4 && o.OrderDate >= oneDayAgo))
-                    .ToList();
+                    .ToList() ?? new List<Order>(); // Devuelve una lista vacía si el resultado es null
 
-                // Obtener los estados de la orden desde la base de datos
                 var orderStatusesFromDb = _ristorante360Context.OrderStatuses.ToList();
-
-                // Construir el diccionario con los datos de la base de datos
                 var statusDictionary = orderStatusesFromDb.ToDictionary(s => s.OrderStatusId, s => s.Description);
-
-                // Asignar el diccionario a ViewBag para que esté disponible en la vista
                 ViewBag.OrderStatuses = statusDictionary;
 
                 return View(ordersWithClientsAndProducts);
             }
             catch (Exception ex)
             {
-                // Capturar y registrar el error usando el servicio
-                string errorMessage = "Ocurrió un error al cargar la lista de pedidos.";
-                string exceptionMessage = ex.ToString();
-                _errorLoggingService.LogError(errorMessage, exceptionMessage);
-
-                // Redirigir a una página de error o mostrar un mensaje de error personalizado.
+                _errorLoggingService.LogError("Ocurrió un error al cargar la lista de pedidos.", ex.ToString());
                 return View("Error");
             }
         }
+
+
 
 
 
@@ -199,7 +190,6 @@ namespace PruebaRistorante360.Controllers
             }
         }
 
-
         public IActionResult DetalleMenu(int categoryId)
         {
             try
@@ -208,11 +198,11 @@ namespace PruebaRistorante360.Controllers
 
                 List<Product> productos;
 
-                if (categoryId == 0)
+                if (categoryId == 0) // Mostrar todos los productos
                 {
                     productos = _ristorante360Context.Products.ToList();
                 }
-                else
+                else // Filtrar por categoría
                 {
                     productos = _ristorante360Context.Products.Where(p => p.CategoryId == categoryId).ToList();
                 }
@@ -221,13 +211,11 @@ namespace PruebaRistorante360.Controllers
             }
             catch (Exception ex)
             {
-                // Capturar y registrar el error usando el servicio
+                // Manejo de errores
                 string errorMessage = "Ocurrió un error al obtener los detalles de los productos.";
                 string exceptionMessage = ex.ToString();
                 _errorLoggingService.LogError(errorMessage, exceptionMessage);
-
-                // Devolver una vista de error o un mensaje de error personalizado
-                return View("Error"); // Puedes crear una vista llamada "Error" para mostrar mensajes de error amigables
+                return View("Error");
             }
         }
 
@@ -236,12 +224,21 @@ namespace PruebaRistorante360.Controllers
         {
             try
             {
+                // Obtener el UserId del usuario autenticado
+                var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+                // Validar si el UserId es null o no es un número válido
+                if (string.IsNullOrEmpty(userId) || !int.TryParse(userId, out int parsedUserId))
+                {
+                    return Json(new { success = false, message = "Error: el usuario no está autenticado correctamente." });
+                }
+
                 // Crear un nuevo objeto Order y establecer sus valores
                 var newOrder = new Order
                 {
                     OrderDate = DateTime.Now,
-                    OrderStatusId = 1, // Puedes establecer el OrderStatusId como 1 aquí, o recuperarlo de la base de datos si es necesario
-                    UserId = 4 // Aquí debes implementar la lógica para obtener el UserId del usuario que está iniciando sesión
+                    OrderStatusId = 1, // Estado inicial de la orden
+                    UserId = parsedUserId // Asigna el UserId obtenido del usuario autenticado
                 };
 
                 // Agregar el nuevo objeto Order a la tabla "Order"
@@ -293,6 +290,9 @@ namespace PruebaRistorante360.Controllers
                 return Json(new { success = false, message = "Error al agregar la orden." });
             }
         }
+
+
+
 
         [HttpPost]
         public IActionResult CompletarOrden(Order orderclient)
