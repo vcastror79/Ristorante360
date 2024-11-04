@@ -11,6 +11,7 @@ using System.Text;
 using iTextSharp.tool.xml;
 using System.IO.Pipelines;
 using Rectangle = iTextSharp.text.Rectangle;
+using Microsoft.AspNetCore.Hosting.Server;
 
 
 namespace Ristorante_360_Admin.Controllers
@@ -68,7 +69,11 @@ namespace Ristorante_360_Admin.Controllers
             string imagePath = Path.Combine(_hostingEnvironment.WebRootPath, "images", "logoChanteCircular.png");
 
             // Crear una instancia de la clase Image y cargar la imagen desde la ruta
-            iTextSharp.text.Image image = iTextSharp.text.Image.GetInstance(imagePath);///ESTO ESTA DANDO PROBLEMAS TROUBLESHOOT!!!
+            iTextSharp.text.Image image = iTextSharp.text.Image.GetInstance(Path.Combine(_hostingEnvironment.WebRootPath, "images", "logoR360Circular_256x256.png"));
+
+
+            //iTextSharp.text.Image image = iTextSharp.text.Image.GetInstance(Server.MapPath("~/wwwroot/images/logoR360Circular_256x256.png"));
+
             image.Alignment = Element.ALIGN_CENTER;
             image.ScaleToFit(150f, 150f); // Ajustar tamaño de la imagen
 
