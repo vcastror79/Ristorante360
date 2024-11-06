@@ -370,45 +370,54 @@ namespace PruebaRistorante360.Controllers
             try
             {
                 var order = _ristorante360Context.Orders.FirstOrDefault(o => o.OrderId == orderId);
-                if (order != null)
+                if (order == null)
                 {
-                    if (statusId == 3)
-                    {
-                        _procedureExecutor.ExecuteDescontarInsumos(orderId);
-                        _procedureExecutor.ExecuteUpdateProductAvailability();
-                        _procedureExecutor.ExecuteCheckInventoryStatus();
-
-                        order.OrderStatusId = statusId;
-                    }
-                    else
-                    {
-                        order.OrderStatusId = statusId;
-                    }
-                    _logService.Log($"Se cambia el estado a {statusId}, de la orden #{orderId}", "VentasPedidos");
-
-                    var createDate = DateTime.Now;
-                    _procedureExecutor.ExecuteCreateNotificationForAgotado(createDate);
-
-                    _ristorante360Context.SaveChanges();
-
-                    transaction.Commit(); // Confirma la transacción si todas las operaciones fueron exitosas
+                    return Json(new { success = false, message = "Orden no encontrada." });
                 }
 
-                return RedirectToAction("Pedidos");
+                // Verifica el ID del estado antes de actualizar
+                if (statusId == 3)
+                {
+                    // Intenta ejecutar los procedimientos almacenados para el estado "Completado"
+                    _procedureExecutor.ExecuteDescontarInsumos(orderId);
+                    _procedureExecutor.ExecuteUpdateProductAvailability();
+                    _procedureExecutor.ExecuteCheckInventoryStatus();
+                }
+
+                // Actualiza el estado de la orden
+                order.OrderStatusId = statusId;
+                _logService.Log($"Se cambia el estado a {statusId}, de la orden #{orderId}", "VentasPedidos");
+
+                var createDate = DateTime.Now;
+                _procedureExecutor.ExecuteCreateNotificationForAgotado(createDate);
+
+                _ristorante360Context.SaveChanges();
+                transaction.Commit(); // Confirma la transacción si todas las operaciones fueron exitosas
+
+                // Devuelve una respuesta JSON con éxito
+                return Json(new { success = true, newStatusText = ObtenerDescripcionEstado(statusId) });
             }
             catch (Exception ex)
             {
-                // Revierte la transacción en caso de excepción
-                transaction.Rollback();
+                transaction.Rollback(); // Revierte la transacción en caso de error
 
-                // Captura y registra el error
-                string errorMessage = "Ocurrió un error al procesar la solicitud.";
-                string exceptionMessage = ex.ToString();
-                _errorLoggingService.LogError(errorMessage, exceptionMessage);
+                // Log detallado del error
+                string errorMessage = $"Error al actualizar el estado de la orden #{orderId} a estado {statusId}.";
+                _errorLoggingService.LogError(errorMessage, ex.ToString());
 
-                // Redirigir a una página de error o mostrar un mensaje de error personalizado.
-                return View("Error");
+                // Devuelve un JSON con el mensaje detallado del error
+                return Json(new { success = false, message = $"Ocurrió un error al actualizar el estado: {ex.Message}" });
             }
+        }
+
+
+        // Método auxiliar para obtener la descripción del estado según el ID
+        private string ObtenerDescripcionEstado(int statusId)
+        {
+            return _ristorante360Context.OrderStatuses
+                       .Where(s => s.OrderStatusId == statusId)
+                       .Select(s => s.Description)
+                       .FirstOrDefault() ?? "Estado desconocido";
         }
 
 

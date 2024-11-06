@@ -90,8 +90,9 @@
                                                         <div class="py-2">
                                                             @foreach (var status in ViewBag.OrderStatuses)
                                                             {
-                                                                <a class="dropdown-item" data-orderid="@orderProduct?.OrderId" data-statusid="@status.Key">@status.Value</a>
+                                                                <a class="dropdown-item" href="#" data-orderid="@orderProduct?.OrderId" data-statusid="@status.Key">@status.Value</a>
                                                             }
+
                                                         </div>
                                                     </div>
                                                 </div>
@@ -108,7 +109,17 @@
     </div>
 </div>
 
-<!-- Required vendors -->
+<!-- jQuery primero -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Bootstrap desde CDN -->
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
+
+<!-- metisMenu después de jQuery y Bootstrap -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/metisMenu/3.0.7/metisMenu.min.js"></script>
+
+<!-- Scripts requeridos de tu proyecto -->
 <script src="~/vendor/bootstrap-select/dist/js/bootstrap-select.min.js"></script>
 <script src="~/vendor/chart.js/Chart.bundle.min.js"></script>
 <script src="~/js/custom.min.js"></script>
@@ -116,19 +127,40 @@
 <!-- Apex Chart -->
 <script src="~/vendor/apexchart/apexchart.js"></script>
 <script src="~/vendor/highlightjs/highlight.pack.min.js"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Inicializar metisMenu y dropdown de Bootstrap -->
+<script>
+    $(document).ready(function () {
+        // Inicializar metisMenu
+        $('#menu').metisMenu();
+
+        // Forzar la inicialización del dropdown de Bootstrap
+        $('.dropdown-toggle').dropdown();
+    });
+</script>
+
 
 <script>
     $(document).ready(function () {
         $(".dropdown-item").click(function () {
             var orderId = $(this).data("orderid");
             var statusId = $(this).data("statusid");
+
             $.ajax({
                 url: '@Url.Action("UpdateOrderStatus", "VentasPedidos")',
                 type: 'POST',
                 data: { orderId: orderId, statusId: statusId },
-                success: function () {
-                    location.reload();
+                success: function (response) {
+                    console.log("Respuesta del servidor:", response);
+
+                    if (response.success) {
+                        console.log("Estado actualizado exitosamente en el servidor");
+                        // Actualizar visualmente el estado
+                        $(`#order-${orderId} .badge`).text(response.newStatusText);
+                    } else {
+                        console.log('No se pudo actualizar el estado:', response.message);
+                        alert('No se pudo actualizar el estado: ' + response.message);
+                    }
                 },
                 error: function () {
                     alert('Error al actualizar el estado');
@@ -137,6 +169,10 @@
         });
     });
 </script>
+
+
+
+
 
 <style>
     .order-card {

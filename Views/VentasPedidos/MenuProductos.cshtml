@@ -21,14 +21,36 @@
             </div>
             <br />
             <form id="menuForm" method="post" asp-action="MenuProductos" asp-controller="VentasPedidos">
-                <button type="button" class="btn btn-category btn-rounded btn-outline-primary" id="todoButton"><img src="~/images/icons/todo.png" />Todos</button>
-                <button type="button" class="btn btn-category btn-rounded btn-outline-primary" id="pizzaButton"><img src="~/images/icons/pizza.png" />Pizza</button>
-                <button type="button" class="btn btn-category btn-rounded btn-outline-primary" id="hamburguesaButton"><img src="~/images/icons/hamburguesa.png" />Hamburguesa Artesanal</button>
-                <button type="button" class="btn btn-category btn-rounded btn-outline-primary" id="polloButton"><img src="~/images/icons/pollo.png" />Pollo</button>
-                <button type="button" class="btn btn-category btn-rounded btn-outline-primary" id="comidaRapidaButton"><img src="~/images/icons/comidarapida.png" />Comidas Rapidas</button>
-                <button type="button" class="btn btn-category btn-rounded btn-outline-primary" id="postreButton"><img src="~/images/icons/postre.png" />Postres</button>
-                <input type="hidden" name="categoryId" />
+                <button type="button" class="btn btn-category btn-rounded btn-outline-primary" id="todoButton" onclick="setCategoryIdAndSubmit(0)">
+                    <img src="~/images/icons/todo.png" /> Todos
+                </button>
+
+                <button type="button" class="btn btn-category btn-rounded btn-outline-primary" id="platoFuerteButton" onclick="setCategoryIdAndSubmit(4)">
+                    <!-- <img src="~/images/icons/pasta.png.webp" />--> Plato fuerte
+                </button>
+
+                <button type="button" class="btn btn-category btn-rounded btn-outline-primary" id="entradaButton" onclick="setCategoryIdAndSubmit(1)">
+                    <!-- <img src="~/images/icons/entrada.png" />--> Entradas
+                </button>
+
+                <button type="button" class="btn btn-category btn-rounded btn-outline-primary" id="vinoButton" onclick="setCategoryIdAndSubmit(2)">
+                    <!-- <img src="~/images/icons/vino.png" />--> Vinos
+                </button>
+
+                <button type="button" class="btn btn-category btn-rounded btn-outline-primary" id="postreButton" onclick="setCategoryIdAndSubmit(3)">
+                    <!-- <img src="~/images/icons/postre.png.webp" />--> Postres
+                </button>
+
+                <input type="hidden" name="categoryId" id="categoryId" />
             </form>
+
+            <script>
+                function setCategoryIdAndSubmit(categoryId) {
+                    document.getElementById("categoryId").value = categoryId;
+                    document.getElementById("menuForm").submit();
+                }
+            </script>
+
         </div>
         <div class="row">
             @foreach (var producto in Model)

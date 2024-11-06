@@ -1,5 +1,4 @@
-﻿
-@{
+﻿@{
     var userrol = Context.Session.GetInt32("Rol");
     var username = Context.Session.GetString("Username");
 }
@@ -20,7 +19,6 @@
     <link href="~/css/style.css" rel="stylesheet">
     <link href="https://cdn.lineicons.com/2.0/LineIcons.css" rel="stylesheet">
     <link href="~/css/CustomCSS/footer.css" rel="stylesheet">
-
 
     <style>
         /* menú arriba */
@@ -56,6 +54,7 @@
             color: #000000;
         }
     </style>
+
     <style>
         /* menú izquierda */
         .nav-header a {
@@ -75,9 +74,9 @@
     </script>
 
 </head>
+
 <body>
     <script src="~/vendor/global/global.min.js"></script>
-
 
     <div id="preloader">
         <div class="sk-three-bounce">
@@ -90,15 +89,10 @@
     <div id="main-wrapper">
         <div class="nav-header">
             <a href="../Home/Index" class="brand-logo">
-
                 <img class="logo-abbr" src="~/images/logoR360Circular_256x256.png" alt="">
-
-
-                <<img class="logo-compact" src="~/images/textoR360.png" alt=""> 
-                <<img class="brand-title" src="~/images/textoR360.png" alt=""> 
+                <img class="logo-compact" src="~/images/textoR360.png" alt="">
+                <img class="brand-title" src="~/images/textoR360.png" alt="">
             </a>
-
-
 
             <div class="nav-control">
                 <div class="hamburger">
@@ -106,6 +100,7 @@
                 </div>
             </div>
         </div>
+
         <div class="header">
             <div class="header-content">
                 <nav class="navbar navbar-expand">
@@ -115,7 +110,6 @@
 
                         <ul class="navbar-nav header-right">
                             @await Component.InvokeAsync("Notification")
-
 
                             <li class="nav-item dropdown header-profile">
                                 <a class="nav-link" href="#" role="button" data-toggle="dropdown">
@@ -144,6 +138,7 @@
                 </nav>
             </div>
         </div>
+
         <div class="deznav">
             <div class="deznav-scroll">
                 <ul class="metismenu" id="menu">
@@ -169,9 +164,7 @@
                                 <ul aria-expanded="false">
                                     <!--Aqui van los modulos-->
                                     <li><a asp-controller="VentasPedidos" asp-action="DetalleMenu">Detalle de productos</a></li>
-                                    <li><a asp-controller="VentasPedidos" asp-action="Pedidos">Pedidos</a></li>
-
-
+                                    <li><a asp-controller="VentasPedidos" asp-action="Pedidos">Órdenes</a></li>
                                 </ul>
                             </li>
                         </ul>
@@ -189,16 +182,11 @@
                                 <li>
                                     <a class="has-arrow" href="javascript:void()" aria-expanded="false">Reportes</a>
                                     <ul aria-expanded="false">
-                                        @*                                    <li><a asp-controller="ReportesGraficos" asp-action="RptVentas">Reportes de ventas</a></li>
-                                    <li><a asp-controller="ReportesGraficos" asp-action="RptInventario">Reportes de inventario</a></li>*@
                                         <li><a asp-controller="ReportesGraficos" asp-action="Logs">Registro de actividad</a></li>
-
                                     </ul>
                                 </li>
                                 <li><a asp-controller="ReportesGraficos" asp-action="GraficosInventario">Gráficos de Inventario</a></li>
                                 <li><a asp-controller="ReportesGraficos" asp-action="GraficosProductos">Gráficos de Productos</a></li>
-
-
                             </ul>
                         </li>
 
@@ -212,7 +200,6 @@
                                 <li><a asp-controller="Inventario" asp-action="ConsultaInventario">Inventario</a></li>
                                 <li><a asp-controller="Productos" asp-action="ProductList">Productos</a></li>
                                 <li><a asp-controller="Inventario" asp-action="SupplieProductList">Insumos por producto</a></li>
-
                             </ul>
                         </li>
 
@@ -223,13 +210,11 @@
                                 <span class="nav-text">Administración</span>
                             </a>
                             <ul aria-expanded="false">
-
                                 <li><a asp-controller="Productos" asp-action="SuppliesList">Insumos</a></li>
                                 <li><a asp-controller="Clientes" asp-action="ClientList">Clientes</a></li>
                             </ul>
                         </li>
-
-
+                        <!-- Sección de Acerca De -->
                         <li>
                             <a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
                                 <i class="flaticon-381-help"></i>
@@ -239,22 +224,15 @@
                                 <li><a asp-controller="AcercaDe" asp-action="Index">Acerca De</a></li>
                             </ul>
                         </li>
-
-
-
                     }
-
-
                 </ul>
             </div>
         </div>
         @RenderBody()
-
     </div>
 
     <footer>
         <div class="footer-content">
-
             <div class="info-section">
                 <h3>Información</h3>
                 <ul class="info-list">
@@ -263,7 +241,6 @@
                     <li>Email: vicente.castror@icloud.com</li>
                 </ul>
             </div>
-
         </div>
     </footer>
 
@@ -278,8 +255,8 @@
 
     <script src="~/js/dashboard/dashboard-1.js"></script>
 
-</body>
 
+</body>
 </html>
 
 <style>
