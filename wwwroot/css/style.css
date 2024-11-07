@@ -9464,11 +9464,23 @@ svg.pulse-svg {
       color: #545454; }
       .header-right .notification_dropdown .nav-link.primary [fill] {
         fill: #545454; }
+
+
     .header-right .notification_dropdown .nav-link.warning {
       background: #ffeae6;
       color: #ff6d4d; }
+
+
+
+    .header-right .notification_dropdown .nav-link.warning {
+      background-color: #e6f4ea !important; /* Fondo verde claro */
+      color: #6AA84F !important; /* Color verde para el icono */
+      border-color: #e6f4ea !important; /* Asegura que el borde tenga el mismo color, si existe */ }
+
+
       .header-right .notification_dropdown .nav-link.warning [fill] {
-        fill: #ff6d4d; }
+        fill: #6AA84F; }
+
     .header-right .notification_dropdown .nav-link.success {
       background: #e7faec;
       color: #2bc155; }
