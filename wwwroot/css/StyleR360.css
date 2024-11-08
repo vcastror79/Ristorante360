@@ -1,8 +1,59 @@
-﻿/* Aplicar fuentes en estilos específicos */
+﻿/* Estructura de la página */
+html, body {
+    height: 100%;
+    margin: 0;
+    font-family: 'Roboto', sans-serif;
+}
 
 body {
-    font-family: 'Roboto', sans-serif;
-    margin-bottom: 60px;
+    display: flex;
+    flex-direction: column;
+}
+
+#main-wrapper {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.content-body {
+    flex: 1;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Estilos del pie de página */
+footer {
+    background-color: #f8f9fa;
+    text-align: center;
+    padding: 10px 0;
+    width: 100%;
+    position: relative;
+}
+
+.footer-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.info-section h3 {
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+.info-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* Otros estilos ya existentes */
+.menu-icon {
+    margin-right: 15px;
+    font-size: 18px;
+    vertical-align: middle;
 }
 
 /* Botones sutiles */
@@ -16,51 +67,32 @@ body {
         text-decoration: underline;
     }
 
-/* Estilo de títulos con Playfair Display */
 h1, h2, h3, h4, h5, h6 {
     font-family: 'Playfair Display', serif;
     font-weight: 700;
     color: #333;
 }
 
-/* Otros ajustes para botones */
 .btn {
     font-family: 'Roboto', sans-serif;
     font-weight: 700;
 }
 
-html {
-    position: relative;
-    min-height: 100%;
-}
-
-.menu-icon {
-    margin-right: 15px;
-    font-size: 18px;
-    vertical-align: middle;
-}
-
-
-/*Acerca de CSS*/
-
-.content-body {
-    padding: 20px;
-}
-
+/* Acerca de CSS */
 .content-info {
     width: 65%;
-    margin-right: 20px; /* Añade espacio a la derecha para evitar el choque con el logo */
+    margin-right: 20px;
 }
 
 .icon-container {
-    width: 25%; /* Ajusta según el diseño deseado */
+    width: 25%;
     display: flex;
     justify-content: flex-end;
     align-items: flex-start;
 }
 
 .logo-img {
-    width: 200px; /* Tamaño del icono */
+    width: 200px;
     height: 200px;
 }
 
@@ -83,4 +115,3 @@ p {
     font-size: 16px;
     line-height: 1.6;
 }
-

@@ -25,37 +25,22 @@
         .header {
             background-color: #f2f2f2;
         }
-    </style>
-
-    <style>
         /* menú izquierda */
         .deznav {
             background-color: #f2f2f2;
         }
-    </style>
-
-    <style>
         /* texto principal */
         [data-sidebar-style="full"][data-layout="vertical"] .deznav .metismenu > li > a {
             color: #5a5a5a;
         }
-    </style>
-
-    <style>
         /* texto dentro menú */
         .deznav .metismenu a {
             color: #585858;
         }
-    </style>
-
-    <style>
         /* iconos */
         [data-sidebar-style="full"][data-layout="vertical"] .deznav .metismenu > li > a i {
             color: #000000;
         }
-    </style>
-
-    <style>
         /* menú izquierda */
         .nav-header a {
             background-color: #f2f2f2;
@@ -162,7 +147,6 @@
                                 <!--Modulo de Pedidos-->
                                 <a class="has-arrow" href="javascript:void()" aria-expanded="false">Modulo de pedidos</a>
                                 <ul aria-expanded="false">
-                                    <!--Aqui van los modulos-->
                                     <li><a asp-controller="VentasPedidos" asp-action="DetalleMenu">Detalle de productos</a></li>
                                     <li><a asp-controller="VentasPedidos" asp-action="Pedidos">Órdenes</a></li>
                                 </ul>
@@ -170,7 +154,7 @@
                         </ul>
                     </li>
 
-                    <!-- Sección de Gráficos -->
+                    <!-- Sección de Gráficos, Inventario y Administración solo para Admin -->
                     @if (userrol == 1)
                     {
                         <li>
@@ -190,19 +174,7 @@
                             </ul>
                         </li>
 
-                        <!-- Sección de Inventario -->
-                        <li>
-                            <a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
-                                <i class="flaticon-381-network"></i>
-                                <span class="nav-text">Inventario</span>
-                            </a>
-                            <ul aria-expanded="false">
-                                <li><a asp-controller="Inventario" asp-action="ConsultaInventario">Inventario</a></li>
-                                <li><a asp-controller="Productos" asp-action="ProductList">Productos</a></li>
-                                <li><a asp-controller="Inventario" asp-action="SupplieProductList">Insumos por producto</a></li>
-                            </ul>
-                        </li>
-
+             
                         <!-- Sección de Administración -->
                         <li>
                             <a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
@@ -214,17 +186,18 @@
                                 <li><a asp-controller="Clientes" asp-action="ClientList">Clientes</a></li>
                             </ul>
                         </li>
-                        <!-- Sección de Acerca De -->
-                        <li>
-                            <a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
-                                <i class="flaticon-381-help"></i>
-                                <span class="nav-text">Acerca De</span>
-                            </a>
-                            <ul aria-expanded="false">
-                                <li><a asp-controller="AcercaDe" asp-action="Index">Acerca De</a></li>
-                            </ul>
-                        </li>
                     }
+
+                    <!-- Sección de Acerca De al final del menú -->
+                    <li>
+                        <a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
+                            <i class="flaticon-381-help"></i>
+                            <span class="nav-text">Acerca De</span>
+                        </a>
+                        <ul aria-expanded="false">
+                            <li><a asp-controller="AcercaDe" asp-action="Index">Acerca De</a></li>
+                        </ul>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -248,14 +221,10 @@
     <script src="~/vendor/chart.js/Chart.bundle.min.js"></script>
     <script src="~/js/custom.min.js"></script>
     <script src="~/js/deznav-init.js"></script>
-
     <script src="~/vendor/waypoints/jquery.waypoints.min.js"></script>
     <script src="~/vendor/jquery.counterup/jquery.counterup.min.js"></script>
     <script src="~/vendor/peity/jquery.peity.min.js"></script>
-
     <script src="~/js/dashboard/dashboard-1.js"></script>
-
-
 </body>
 </html>
 
@@ -280,8 +249,8 @@
     }
 
     .btnprueba {
-        width: 270px; /* Duplicamos el valor original (140px * 2) */
-        height: 80px; /* Duplicamos el valor original (45px * 2) */
+        width: 270px;
+        height: 80px;
         font-family: 'Roboto', sans-serif;
         font-size: 13px;
         text-transform: uppercase;
@@ -302,5 +271,4 @@
             color: #fff;
             transform: translateY(-7px);
         }
-
 </style>
