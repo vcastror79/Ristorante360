@@ -83,7 +83,7 @@
                                             @if (orderProduct?.OrderStatusId != 3 && orderProduct?.OrderStatusId != 4)
                                             {
                                                 <div class="dropdown text-sans-serif text-right">
-                                                    <button class="btn btn-success light sharp" type="button" id="order-dropdown-@orderProduct?.OrderId" data-toggle="dropdown" data-boundary="viewport" aria-haspopup="true" aria-expanded="false">
+                                                    <button class="btn btn-success light sharp dropdown-toggle" type="button" id="order-dropdown-@orderProduct?.OrderId" data-toggle="dropdown" data-boundary="viewport" aria-haspopup="true" aria-expanded="false">
                                                         <span><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="18px" height="18px" viewBox="0 0 24 24" version="1.1"><g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><rect x="0" y="0" width="24" height="24"></rect><circle fill="#000000" cx="5" cy="12" r="2"></circle><circle fill="#000000" cx="12" cy="12" r="2"></circle><circle fill="#000000" cx="19" cy="12" r="2"></circle></g></svg></span>
                                                     </button>
                                                     <div class="dropdown-menu dropdown-menu-right border py-0" aria-labelledby="order-dropdown-@orderProduct?.OrderId">
@@ -92,7 +92,6 @@
                                                             {
                                                                 <a class="dropdown-item" href="#" data-orderid="@orderProduct?.OrderId" data-statusid="@status.Key">@status.Value</a>
                                                             }
-
                                                         </div>
                                                     </div>
                                                 </div>
@@ -111,21 +110,19 @@
 
 <!-- jQuery primero -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
+<!-- metisMenu desde CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/metisMenu/3.0.7/metisMenu.min.js"></script>
+<!-- ApexCharts desde CDN -->
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 <!-- Bootstrap desde CDN -->
 <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
-
-<!-- metisMenu después de jQuery y Bootstrap -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/metisMenu/3.0.7/metisMenu.min.js"></script>
 
 <!-- Scripts requeridos de tu proyecto -->
 <script src="~/vendor/bootstrap-select/dist/js/bootstrap-select.min.js"></script>
 <script src="~/vendor/chart.js/Chart.bundle.min.js"></script>
 <script src="~/js/custom.min.js"></script>
 <script src="~/js/deznav-init.js"></script>
-<!-- Apex Chart -->
-<script src="~/vendor/apexchart/apexchart.js"></script>
 <script src="~/vendor/highlightjs/highlight.pack.min.js"></script>
 
 <!-- Inicializar metisMenu y dropdown de Bootstrap -->
@@ -138,7 +135,6 @@
         $('.dropdown-toggle').dropdown();
     });
 </script>
-
 
 <script>
     $(document).ready(function () {
@@ -170,10 +166,6 @@
     });
 </script>
 
-
-
-
-
 <style>
     .order-card {
         border: 1px solid #f2f2f2;
@@ -204,10 +196,6 @@
             border-radius: 20px;
         }
 
-        .order-card .btn {
-            font-size: 14px;
-        }
-
         .order-card.status-1 {
             background-color: #17a2b8;
         }
@@ -225,29 +213,35 @@
         }
 </style>
 
-@{
-    bool orderCompleted = TempData["OrderCompleted"] != null && (bool)TempData["OrderCompleted"];
-    int? orderId = TempData["OrderId"] as int?;
-}
+<!-- Otros scripts que tienes en tu archivo Pedidos.cshtml -->
 
-@if (orderCompleted && orderId.HasValue && orderId.Value > 0)
-{
-    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.css" rel="stylesheet" />
-    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            var orderId = @orderId;
-            if (orderId) {
-                swal({
-                    title: 'Pedido registrado correctamente!',
-                    text: 'La orden #' + orderId + ' fue registrada correctamente.',
-                    icon: "success",
-                    timer: 3000,
-                    buttons: {
-                        confirm: { text: "Cerrar", value: true, visible: true, className: "", closeModal: true }
+<script>
+    $(document).ready(function () {
+        $(".dropdown-item").click(function () {
+            var orderId = $(this).data("orderid");
+            var statusId = $(this).data("statusid");
+
+            $.ajax({
+                url: '@Url.Action("UpdateOrderStatus", "VentasPedidos")',
+                type: 'POST',
+                data: { orderId: orderId, statusId: statusId },
+                success: function (response) {
+                    console.log("Respuesta del servidor:", response);
+
+                    if (response.success) {
+                        console.log("Estado actualizado exitosamente en el servidor");
+
+                        // Recargar la página para reflejar los cambios en el estado
+                        location.reload();
+                    } else {
+                        console.log('No se pudo actualizar el estado:', response.message);
+                        alert('No se pudo actualizar el estado: ' + response.message);
                     }
-                });
-            }
+                },
+                error: function () {
+                    alert('Error al actualizar el estado');
+                }
+            });
         });
-    </script>
-}
+    });
+</script>

@@ -126,3 +126,41 @@ $(document).ready(function () {
         }
     });
 });
+
+
+//NUEVO
+
+// Función AJAX para cambiar el estado de la orden
+function cambiarEstadoOrden(orderId, newStatusId) {
+    $.ajax({
+        type: 'POST',
+        url: '/VentasPedidos/UpdateOrderStatus',
+        data: { orderId: orderId, statusId: newStatusId },
+        success: function (response) {
+            if (response.success) {
+                // Actualizar la tarjeta de orden en el frontend
+                updateOrderCardStatus(orderId, response.newStatusText);
+            } else {
+                console.error('Error al actualizar el estado:', response.message);
+            }
+        },
+        error: function (error) {
+            console.error('Error en la solicitud:', error);
+        }
+    });
+}
+
+// Función para actualizar la tarjeta de orden en el frontend
+function updateOrderCardStatus(orderId, newStatusText) {
+    const orderCard = $(`#order-${orderId}`);
+    orderCard.find('.estado-texto').text(newStatusText);
+
+    if (newStatusText === "Completado") {
+        orderCard.removeClass("estado-registrado estado-preparando").addClass("estado-completado");
+    } else if (newStatusText === "Preparando") {
+        orderCard.removeClass("estado-registrado estado-completado").addClass("estado-preparando");
+    } else if (newStatusText === "Registrado") {
+        orderCard.removeClass("estado-completado estado-preparando").addClass("estado-registrado");
+    }
+}
+

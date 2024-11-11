@@ -101,9 +101,15 @@ namespace PruebaRistorante360.Controllers
                            (o.OrderStatusId == 3 || o.OrderStatusId == 4 && o.OrderDate >= oneDayAgo))
                     .ToList() ?? new List<Order>(); // Devuelve una lista vacía si el resultado es null
 
-                var orderStatusesFromDb = _ristorante360Context.OrderStatuses.ToList();
+
+                var orderStatusesFromDb = _ristorante360Context.Set<OrderStatus>().FromSqlRaw("SELECT * FROM Order_Status").ToList();
                 var statusDictionary = orderStatusesFromDb.ToDictionary(s => s.OrderStatusId, s => s.Description);
                 ViewBag.OrderStatuses = statusDictionary;
+
+                //ESTOS CAMBIOS SE HICIERON CON EL FIN DE DESPLEGAR EL DROPDOWN DE LAS CARDS
+                //var orderStatusesFromDb = _ristorante360Context.OrderStatuses.ToList();
+                // var statusDictionary = orderStatusesFromDb.ToDictionary(s => s.OrderStatusId, s => s.Description);
+                // ViewBag.OrderStatuses = statusDictionary;
 
                 return View(ordersWithClientsAndProducts);
             }
@@ -115,8 +121,73 @@ namespace PruebaRistorante360.Controllers
         }
 
 
+        [HttpPost]
+        public IActionResult CompletarOrden(Order orderclient)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    // Buscar si el cliente ya existe en la base de datos por su FullName y PhoneNumber
+                    Client existingClient = _ristorante360Context.Clients.FirstOrDefault(c =>
+                        c.FullName == orderclient.Client.FullName && c.PhoneNumber == orderclient.Client.PhoneNumber);
 
+                    // Si el cliente no existe, agregarlo a la tabla Clients
+                    if (existingClient == null)
+                    {
+                        _ristorante360Context.Clients.Add(orderclient.Client);
+                        _ristorante360Context.SaveChanges(); // Guardar cambios en la base de datos
 
+                        // Obtener el ID del cliente generado por la base de datos
+                        int clientId = orderclient.Client.ClientId;
+
+                        // Asignar el ID del cliente a la propiedad ClientId del objeto Order
+                        orderclient.ClientId = clientId;
+                    }
+                    else
+                    {
+                        // Si el cliente ya existe, asignar su ID a la propiedad ClientId del objeto Order
+                        orderclient.ClientId = existingClient.ClientId;
+                    }
+
+                    // Obtener la orden existente por el OrderId
+                    Order existingOrder = _ristorante360Context.Orders.FirstOrDefault(o => o.OrderId == orderclient.OrderId);
+
+                    // Si la orden existe, actualizar los campos OrderTypeId, PaymentMethodId y ClientId
+                    if (existingOrder != null)
+                    {
+                        existingOrder.OrderSpecifications = orderclient.OrderSpecifications;
+                        existingOrder.OrderTypeId = orderclient.OrderTypeId;
+                        existingOrder.PaymentMethodId = orderclient.PaymentMethodId;
+                        existingOrder.OrderDate = DateTime.Now; // Establecer la fecha y hora del pedido
+                        existingOrder.ClientId = orderclient.ClientId; // Asignar el ClientId a la orden existente
+                    }
+
+                    // Guardar los cambios en la base de datos
+                    _ristorante360Context.SaveChanges();
+                    TempData["OrderCompleted"] = true;
+                    TempData["OrderId"] = orderclient.OrderId;
+
+                    _logService.Log($"Se completa la orden del cliente ID: {orderclient.ClientId}", "VentasPedidos");
+
+                    // Redireccionar a la página de éxito u otra página deseada después de guardar los datos
+                    return RedirectToAction("Pedidos"); // Cambia "Exito" por la acción o vista deseada
+                }
+
+                // Si hay algún error en la validación del modelo, regresar a la vista con los mensajes de error
+                return View(orderclient);
+            }
+            catch (Exception ex)
+            {
+                // Capturar y registrar el error usando el servicio
+                string errorMessage = "Error al completar una orden.";
+                string exceptionMessage = ex.ToString();
+                _errorLoggingService.LogError(errorMessage, exceptionMessage);
+
+                // Redirigir a una página de error o mostrar un mensaje de error personalizado.
+                return View("Error");
+            }
+        }
 
 
         [HttpGet]
@@ -294,121 +365,55 @@ namespace PruebaRistorante360.Controllers
 
 
 
-        [HttpPost]
-        public IActionResult CompletarOrden(Order orderclient)
-        {
-            try
-            {
-                if (!ModelState.IsValid)
-                {
-                    // Buscar si el cliente ya existe en la base de datos por su FullName y PhoneNumber
-                    Client existingClient = _ristorante360Context.Clients.FirstOrDefault(c =>
-                        c.FullName == orderclient.Client.FullName && c.PhoneNumber == orderclient.Client.PhoneNumber);
 
-                    // Si el cliente no existe, agregarlo a la tabla Clients
-                    if (existingClient == null)
-                    {
-                        _ristorante360Context.Clients.Add(orderclient.Client);
-                        _ristorante360Context.SaveChanges(); // Guardar cambios en la base de datos
-
-                        // Obtener el ID del cliente generado por la base de datos
-                        int clientId = orderclient.Client.ClientId;
-
-                        // Asignar el ID del cliente a la propiedad ClientId del objeto Order
-                        orderclient.ClientId = clientId;
-                    }
-                    else
-                    {
-                        // Si el cliente ya existe, asignar su ID a la propiedad ClientId del objeto Order
-                        orderclient.ClientId = existingClient.ClientId;
-                    }
-
-                    // Obtener la orden existente por el OrderId
-                    Order existingOrder = _ristorante360Context.Orders.FirstOrDefault(o => o.OrderId == orderclient.OrderId);
-
-                    // Si la orden existe, actualizar los campos OrderTypeId, PaymentMethodId y ClientId
-                    if (existingOrder != null)
-                    {
-                        existingOrder.OrderSpecifications = orderclient.OrderSpecifications;
-                        existingOrder.OrderTypeId = orderclient.OrderTypeId;
-                        existingOrder.PaymentMethodId = orderclient.PaymentMethodId;
-                        existingOrder.OrderDate = DateTime.Now; // Establecer la fecha y hora del pedido
-                        existingOrder.ClientId = orderclient.ClientId; // Asignar el ClientId a la orden existente
-                    }
-
-                    // Guardar los cambios en la base de datos
-                    _ristorante360Context.SaveChanges();
-                    TempData["OrderCompleted"] = true;
-                    TempData["OrderId"] = orderclient.OrderId;
-
-                    _logService.Log($"Se completa la orden del cliente ID: {orderclient.ClientId}", "VentasPedidos");
-
-                    // Redireccionar a la página de éxito u otra página deseada después de guardar los datos
-                    return RedirectToAction("Pedidos"); // Cambia "Exito" por la acción o vista deseada
-                }
-
-                // Si hay algún error en la validación del modelo, regresar a la vista con los mensajes de error
-                return View(orderclient);
-            }
-            catch (Exception ex)
-            {
-                // Capturar y registrar el error usando el servicio
-                string errorMessage = "Error al completar una orden.";
-                string exceptionMessage = ex.ToString();
-                _errorLoggingService.LogError(errorMessage, exceptionMessage);
-
-                // Redirigir a una página de error o mostrar un mensaje de error personalizado.
-                return View("Error");
-            }
-        }
-
+        ///Metodo combinado
         [HttpPost]
         public IActionResult UpdateOrderStatus(int orderId, int statusId)
         {
-            using var transaction = _ristorante360Context.Database.BeginTransaction(); // Inicia una transacción
+            using var transaction = _ristorante360Context.Database.BeginTransaction();
 
             try
             {
+                // Buscar la orden
                 var order = _ristorante360Context.Orders.FirstOrDefault(o => o.OrderId == orderId);
                 if (order == null)
                 {
                     return Json(new { success = false, message = "Orden no encontrada." });
                 }
 
-                // Verifica el ID del estado antes de actualizar
+                // Verificar si el estado es "Completado" (estadoId = 3)
                 if (statusId == 3)
                 {
-                    // Intenta ejecutar los procedimientos almacenados para el estado "Completado"
+                    // Ejecutar DescontarInsumos para ajustar el inventario
                     _procedureExecutor.ExecuteDescontarInsumos(orderId);
-                    _procedureExecutor.ExecuteUpdateProductAvailability();
-                    _procedureExecutor.ExecuteCheckInventoryStatus();
+
+                    // Después de descontar insumos, ejecutar CreateNotificationForAgotado
+                    var createDate = DateTime.Now;
+                    _procedureExecutor.ExecuteCreateNotificationForAgotado(createDate);
                 }
 
-                // Actualiza el estado de la orden
+                // Actualizar el estado de la orden
                 order.OrderStatusId = statusId;
-                _logService.Log($"Se cambia el estado a {statusId}, de la orden #{orderId}", "VentasPedidos");
-
-                var createDate = DateTime.Now;
-                _procedureExecutor.ExecuteCreateNotificationForAgotado(createDate);
-
                 _ristorante360Context.SaveChanges();
-                transaction.Commit(); // Confirma la transacción si todas las operaciones fueron exitosas
+                transaction.Commit(); // Confirmar la transacción
 
-                // Devuelve una respuesta JSON con éxito
+                // Devolver una respuesta exitosa
                 return Json(new { success = true, newStatusText = ObtenerDescripcionEstado(statusId) });
             }
             catch (Exception ex)
             {
-                transaction.Rollback(); // Revierte la transacción en caso de error
+                // Revertir la transacción en caso de error
+                transaction.Rollback();
 
-                // Log detallado del error
+                // Registrar el error
                 string errorMessage = $"Error al actualizar el estado de la orden #{orderId} a estado {statusId}.";
                 _errorLoggingService.LogError(errorMessage, ex.ToString());
 
-                // Devuelve un JSON con el mensaje detallado del error
+                // Devolver un JSON con el mensaje de error
                 return Json(new { success = false, message = $"Ocurrió un error al actualizar el estado: {ex.Message}" });
             }
         }
+
 
 
         // Método auxiliar para obtener la descripción del estado según el ID
