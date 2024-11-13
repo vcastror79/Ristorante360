@@ -174,7 +174,7 @@ namespace Ristorante_360_Admin.Controllers
         public override void OnEndPage(PdfWriter writer, Document document)
         {
             // Agregar encabezado al PDF
-            string headerText = "Reporte de inventario de insumos descargado: " + DateTime.Now.ToString("dd/MM/yyyy HH:mm");
+            string headerText = "Reporte de Inventario de Insumos - Descargado: " + DateTime.Now.ToString("dd/MM/yyyy HH:mm");
             PdfPTable headerTable = new PdfPTable(1);
             PdfPCell headerCell = new PdfPCell(new Phrase(headerText));
             headerCell.Border = Rectangle.NO_BORDER;

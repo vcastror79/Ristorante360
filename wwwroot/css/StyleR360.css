@@ -115,3 +115,19 @@ p {
     font-size: 16px;
     line-height: 1.6;
 }
+
+
+.print-button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 20px;
+    border-radius: 5px;
+}
+
+    .print-button:hover {
+        background-color: #0056b3;
+    }
