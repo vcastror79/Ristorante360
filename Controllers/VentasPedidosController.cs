@@ -85,7 +85,6 @@ namespace PruebaRistorante360.Controllers
             }
         }
 
-
         public IActionResult Pedidos()
         {
             try
@@ -97,19 +96,41 @@ namespace PruebaRistorante360.Controllers
                     .Include(o => o.Client)
                     .Include(o => o.OrderProducts)
                     .ThenInclude(op => op.Product)
-                    .Where(o => o.OrderStatusId == 1 || o.OrderStatusId == 2 ||
-                           (o.OrderStatusId == 3 || o.OrderStatusId == 4 && o.OrderDate >= oneDayAgo))
+                    .Where(o =>
+                        o.OrderStatusId == 1 ||
+                        o.OrderStatusId == 2 ||
+                        o.OrderStatusId == 3 ||
+                        (o.OrderStatusId == 4 && o.OrderDate >= oneDayAgo))
                     .ToList() ?? new List<Order>(); // Devuelve una lista vacía si el resultado es null
 
+                // Validar los datos de los clientes para evitar valores nulos o vacíos
+                foreach (var order in ordersWithClientsAndProducts)
+                {
+                    if (order.Client != null) // Si la orden tiene un cliente asociado
+                    {
+                        order.Client.FullName = !string.IsNullOrWhiteSpace(order.Client.FullName)
+                            ? order.Client.FullName
+                            : "Cliente no especificado";
 
+                        order.Client.Address = !string.IsNullOrWhiteSpace(order.Client.Address)
+                            ? order.Client.Address
+                            : "Dirección no especificada";
+                    }
+                    else
+                    {
+                        // Si la orden no tiene un cliente asociado, asignar valores predeterminados
+                        order.Client = new Client
+                        {
+                            FullName = "Cliente no especificado",
+                            Address = "Dirección no especificada"
+                        };
+                    }
+                }
+
+                // Cargar los estados de las órdenes
                 var orderStatusesFromDb = _ristorante360Context.Set<OrderStatus>().FromSqlRaw("SELECT * FROM Order_Status").ToList();
                 var statusDictionary = orderStatusesFromDb.ToDictionary(s => s.OrderStatusId, s => s.Description);
                 ViewBag.OrderStatuses = statusDictionary;
-
-                //ESTOS CAMBIOS SE HICIERON CON EL FIN DE DESPLEGAR EL DROPDOWN DE LAS CARDS
-                //var orderStatusesFromDb = _ristorante360Context.OrderStatuses.ToList();
-                // var statusDictionary = orderStatusesFromDb.ToDictionary(s => s.OrderStatusId, s => s.Description);
-                // ViewBag.OrderStatuses = statusDictionary;
 
                 return View(ordersWithClientsAndProducts);
             }
@@ -119,6 +140,11 @@ namespace PruebaRistorante360.Controllers
                 return View("Error");
             }
         }
+
+
+
+
+
 
 
         [HttpPost]

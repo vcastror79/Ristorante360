@@ -26,8 +26,10 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="row">
+
                             @foreach (var orderProduct in Model?.OrderBy(s => s.OrderStatusId) ?? Enumerable.Empty<Ristorante360Admin.Models.Order>())
                             {
+
                                 <div class="col-md-4">
                                     <div class="card order-card status-@orderProduct?.OrderStatusId mb-4">
                                         <div class="card-body">
@@ -43,8 +45,17 @@
                                                 <div class="tab-pane fade show active" id="generalContent-@orderProduct?.OrderId" role="tabpanel" aria-labelledby="generalTab-@orderProduct?.OrderId">
                                                     <h5 class="card-title">Pedido: @orderProduct?.OrderId</h5>
                                                     <p class="card-text" style="color:white">Fecha: @orderProduct?.OrderDate</p>
-                                                    <p class="card-text">Cliente: @orderProduct?.Client?.FullName ?? "Cliente no especificado"</p>
-                                                    <p class="card-text">Dirección del cliente: @orderProduct?.Client?.Address ?? "Dirección no especificada"</p>
+
+                                                    <p class="card-text">
+                                                        Cliente: @(orderProduct?.Client != null && !string.IsNullOrWhiteSpace(orderProduct.Client.FullName)
+                                                    ? orderProduct.Client.FullName
+                                                    : "Cliente no especificado")
+                                                    </p>
+                                                    <p class="card-text">
+                                                        Dirección del cliente: @(orderProduct?.Client != null && !string.IsNullOrWhiteSpace(orderProduct.Client.Address)
+                                                    ? orderProduct.Client.Address
+                                                    : "Dirección no especificada")
+                                                    </p>
                                                     <p class="card-text">
                                                         Estado:
                                                         @if (orderProduct?.OrderStatusId == 1)
@@ -75,7 +86,13 @@
                                                         }
                                                     </ul>
                                                     <h5>Especificaciones</h5>
-                                                    <p class="card-text">@orderProduct?.OrderSpecifications ?? "No especificado"</p>
+
+                                                    <p class="card-text">
+                                                        @(orderProduct?.OrderSpecifications != null && !string.IsNullOrWhiteSpace(orderProduct.OrderSpecifications)
+                                                            ? orderProduct.OrderSpecifications
+                                                            : "No especificado")
+                                                    </p>
+
                                                 </div>
                                             </div>
 
