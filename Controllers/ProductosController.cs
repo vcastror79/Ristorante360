@@ -133,6 +133,9 @@ namespace Ristorante360Admin.Controllers
                     _ristoranteContext.Products.Add(product);
                 }
 
+                // DEBUG: Agrega este Console.WriteLine para verificar el valor de Availability
+                Console.WriteLine($"DEBUG: Guardando producto - ID: {product.ProductId}, Nombre: {product.ProductName}, Disponibilidad: {product.Availability}");
+
                 _ristoranteContext.SaveChanges();
                 _logService.Log($"Se {(isNewProduct ? "creó" : "actualizó")} el producto: {product.ProductName}", "Productos");
 

@@ -79,19 +79,26 @@
                                                 </div>
                                                 <div class="tab-pane fade" id="detailsContent-@orderProduct?.OrderId" role="tabpanel" aria-labelledby="detailsTab-@orderProduct?.OrderId">
                                                     <h5>Productos del Pedido: @orderProduct?.OrderId</h5>
+
                                                     <ul>
                                                         @foreach (var product in orderProduct?.OrderProducts ?? Enumerable.Empty<Ristorante360Admin.Models.OrderProduct>())
                                                         {
-                                                            <p class="card-text"> @product?.Product?.ProductName ?? "Producto no especificado" x @product?.Quantity</p>
+                                                            <p class="card-text">
+                                                                @(product?.Product != null && !string.IsNullOrWhiteSpace(product.Product.ProductName)
+                                                                    ? product.Product.ProductName
+                                                                    : "Producto no especificado")
+                                                                x @(product?.Quantity ?? 0)
+                                                            </p>
                                                         }
                                                     </ul>
                                                     <h5>Especificaciones</h5>
-
                                                     <p class="card-text">
                                                         @(orderProduct?.OrderSpecifications != null && !string.IsNullOrWhiteSpace(orderProduct.OrderSpecifications)
                                                             ? orderProduct.OrderSpecifications
                                                             : "No especificado")
                                                     </p>
+
+
 
                                                 </div>
                                             </div>
@@ -214,19 +221,19 @@
         }
 
         .order-card.status-1 {
-            background-color: #17a2b8;
+            background-color: #5870dc;
         }
 
         .order-card.status-2 {
-            background-color: #ffc107;
+            background-color: #e5be01;
         }
 
         .order-card.status-3 {
-            background-color: #28a745;
+            background-color: #356312;
         }
 
         .order-card.status-4 {
-            background-color: #FF0000;
+            background-color: #c9665a;
         }
 </style>
 

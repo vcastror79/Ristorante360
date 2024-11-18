@@ -46,26 +46,24 @@
 </li>
 
 <script>
-    $(document).ready(function () {
-        // Manejar el clic en una notificación
-        $('.notification-item').on('click', function () {
-            var notificationId = $(this).data('notification-id');
-            updateNotificationIsRead(notificationId);
-        });
-
-        // Función para enviar la solicitud POST al servidor
-        function updateNotificationIsRead(notificationId) {
-            $.post('@Url.Action("UpdateNotificationIsRead", "Home")', { notificationId: notificationId })
-                .done(function () {
-                    // Actualizar la vista si es necesario
-                    window.location.href = '@Url.Action("ConsultaInventario", "Inventario")';
-                })
-                .fail(function (error) {
-                    console.error('Error al actualizar la notificación:', error);
-                });
-        }
+    $(document).on('click', '.notification-item', function () {
+        var notificationId = $(this).data('notification-id');
+        updateNotificationIsRead(notificationId);
     });
+
+    // Función para enviar la solicitud POST al servidor
+    function updateNotificationIsRead(notificationId) {
+        $.post('@Url.Action("UpdateNotificationIsRead", "Home")', { notificationId: notificationId })
+            .done(function () {
+                // Actualizar la vista si es necesario
+                location.reload(); // Recarga la página o actualiza el dropdown
+            })
+            .fail(function (error) {
+                console.error('Error al actualizar la notificación:', error);
+            });
+    }
 </script>
+
 
 <style>
     .unread {

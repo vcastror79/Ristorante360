@@ -78,6 +78,11 @@
         var disponibles = @Html.Raw(Json.Serialize(ViewData["Disponibles"]));
         var noDisponibles = @Html.Raw(Json.Serialize(ViewData["NoDisponibles"]));
 
+
+        // LOGS: Verificar datos en la consola del navegador
+        console.log('Productos Disponibles:', disponibles);
+        console.log('Productos No Disponibles:', noDisponibles);
+
         // Configuración del gráfico de pastel de disponibilidad de productos
         var availabilityOptions = {
             responsive: true,

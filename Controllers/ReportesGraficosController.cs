@@ -132,19 +132,23 @@ namespace PruebaRistorante.Controllers
                 var disponiblesCount = inventoryData.Count(p => p.Availability);
                 var noDisponiblesCount = inventoryData.Count(p => !p.Availability);
 
+
                 // Obtener los nombres de los productos disponibles y no disponibles
                 var disponibles = inventoryData.Where(p => p.Availability).Select(p => p.ProductName).ToList();
                 var noDisponibles = inventoryData.Where(p => !p.Availability).Select(p => p.ProductName).ToList();
 
+
                 // Obtener los nombres y precios de los productos
                 var productPrices = inventoryData.Select(p => new { ProductName = p.ProductName, Price = p.Price }).ToList();
 
-                // Pasar los datos a la vista
-                ViewData["DisponiblesCount"] = disponiblesCount;
+
+                    // Pasar los datos a la vista
+                    ViewData["DisponiblesCount"] = disponiblesCount;
                 ViewData["NoDisponiblesCount"] = noDisponiblesCount;
                 ViewData["Disponibles"] = disponibles;
                 ViewData["NoDisponibles"] = noDisponibles;
                 ViewData["ProductPrices"] = productPrices;
+
 
                 return View();
             }

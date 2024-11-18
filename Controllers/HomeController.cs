@@ -84,26 +84,31 @@ namespace Ristorante360Admin.Controllers
         {
             try
             {
+                // Buscar la notificación en la base de datos
                 var notification = _ristoranteContext.Notifications.FirstOrDefault(n => n.NotificationId == notificationId);
-                if (notification != null)
+                if (notification == null)
                 {
-                    notification.IsRead = true;
-                    _ristoranteContext.SaveChanges();
-                    return Ok();
+                    return NotFound(new { message = "La notificación no fue encontrada." }); // Devolver 404 con un mensaje descriptivo
                 }
-                else
-                {
-                    return NotFound(); // Devolver un resultado 404 si no se encuentra la notificación
-                }
+
+                // Marcar la notificación como leída
+                notification.IsRead = true;
+                _ristoranteContext.SaveChanges();
+
+                return Ok(new { success = true, message = "Notificación actualizada correctamente." });
             }
             catch (Exception ex)
             {
-                string errorMessage = "Ocurrió un error al actualizar la notificación.";
+                // Registrar el error con un mensaje más detallado
+                string errorMessage = $"Error al actualizar la notificación con ID {notificationId}.";
                 string exceptionMessage = ex.ToString();
                 _errorLoggingService.LogError(errorMessage, exceptionMessage);
-                return StatusCode(500); // Devolver un resultado 500 en caso de error interno del servidor
+
+                // Devolver 500 con un mensaje descriptivo
+                return StatusCode(500, new { success = false, message = "Error interno del servidor. Por favor, intente nuevamente más tarde." });
             }
         }
+
 
     }
 }
