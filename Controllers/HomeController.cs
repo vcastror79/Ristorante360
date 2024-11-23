@@ -79,6 +79,7 @@ namespace Ristorante360Admin.Controllers
                 return View("Error");
             }
         }
+
         [HttpPost]
         public IActionResult UpdateNotificationIsRead(int notificationId)
         {
@@ -108,7 +109,6 @@ namespace Ristorante360Admin.Controllers
                 return StatusCode(500, new { success = false, message = "Error interno del servidor. Por favor, intente nuevamente más tarde." });
             }
         }
-
 
     }
 }

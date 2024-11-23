@@ -109,13 +109,33 @@ namespace Ristorante360Admin.Controllers
                     return View(oUserVM2);
                 }
 
+                //  if (oUserVM.oUser.UserId == 0)
+                //{
+                //  string hashedPassword = Resources.Utilities.EncryptKey(oUserVM.oUser.Password);
+                //oUserVM.oUser.Password = hashedPassword;
+                //oUserVM.oUser.Status = true;
+                //_ristoranteContext.Users.Add(oUserVM.oUser);
+                //}
+
+
                 if (oUserVM.oUser.UserId == 0)
                 {
-                    string hashedPassword = Resources.Utilities.EncryptKey(oUserVM.oUser.Password);
+                    // Encriptar la contraseña temporal
+                    string hashedPassword = Resources.Utilities.EncryptKey("contraseñaTemporal"); // Asegúrate de usar el mismo estándar que en Login
                     oUserVM.oUser.Password = hashedPassword;
+
+                    // Configurar el estado del usuario
                     oUserVM.oUser.Status = true;
+
+                    // Marcar la contraseña como temporal
+                    oUserVM.oUser.IsTemporaryPassword = true; // Aquí configuramos el nuevo campo
+
+                    // Agregar el usuario al contexto
                     _ristoranteContext.Users.Add(oUserVM.oUser);
                 }
+
+
+
                 else if (oUserVM.oUser.Password == null)
                 {
                     var existingUser = _ristoranteContext.Users.FirstOrDefault(u => u.UserId == oUserVM.oUser.UserId);

@@ -18,7 +18,9 @@ public partial class User
     [EmailAddress(ErrorMessage = "Por favor, ingresa una dirección de correo electrónico válida.")]
     public string Email { get; set; } = null!;
 
-    public bool Status { get; set; }
+    //public bool Status { get; set; }
+    public bool Status { get; set; } = false; // Asegurarte de que el valor predeterminado sea `false`
+
     [Required(ErrorMessage = "Este campo es obligatorio.")]
 
     public int RoleId { get; set; }
@@ -35,5 +37,9 @@ public partial class User
     public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
 
     public virtual Role oRole { get; set; } = null!;
+
+    public bool IsTemporaryPassword { get; set; } = false; // Valor predeterminado
+
+
 }
 
