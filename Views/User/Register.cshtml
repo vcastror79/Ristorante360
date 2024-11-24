@@ -93,9 +93,12 @@
 
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
+
+    
     <script>
-        // Verificar si el usuario fue registrado exitosamente
+         //Verificar si el usuario fue registrado exitosamente
         var registerSuccess = '@TempData["RegisterSuccess"]';
+        var userData = '@TempData["UserData"]'
         if (registerSuccess) {
             swal({
                 title: "Éxito",
@@ -104,11 +107,13 @@
                 buttons: {
                     confirm: "Aceptar"
                 }
-            })
-                .then(function () {
-                    window.location.href = '@Url.Action("Login", "User")';
-                });
-        }
+           })
+             .then(function () {
+                   window.location.href = '@Url.Action("Login", "User")';
+           });
+       }
+
+
 
         // Verificar si hubo un error al registrar el usuario
         var registerError = '@TempData["RegisterError"]';

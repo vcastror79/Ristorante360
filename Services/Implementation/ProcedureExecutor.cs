@@ -26,6 +26,9 @@ namespace Ristorante360Admin.Services.Implementation
 
         public void ExecuteDescontarInsumos(int orderId)
         {
+            // Agregar un log para verificar el valor de orderId
+            Console.WriteLine($"Valor de orderId antes de ejecutar DescontarInsumos: {orderId}");
+
             _ristoranteContext.Database.ExecuteSqlRaw("EXEC DescontarInsumos @OrderId",
                 new SqlParameter("@OrderId", orderId));
         }

@@ -64,16 +64,14 @@ namespace Ristorante360Admin.Controllers
 
 
 
-
-
                 // Validar si la contraseña es correcta
-                string hashedPassword = Utilities.EncryptKey(user.Password);
+               // string hashedPassword = Utilities.EncryptKey(user.Password);
 
-                if (user_found.Password != hashedPassword)
-                {
-                    ViewData["Message"] = "El usuario y/o contraseña son incorrectos.";
-                    return View();
-                }
+               // if (user_found.Password != hashedPassword)
+             //   {
+              //      ViewData["Message"] = "El usuario y/o contraseña son incorrectos.";
+             //       return View();
+             //   }
 
 
                 // Validar si la contraseña es temporal
@@ -161,63 +159,64 @@ namespace Ristorante360Admin.Controllers
             return RedirectToAction("Login");
         }
 
-
         [HttpPost]
-public async Task<IActionResult> Register(User model)
-{
-    ModelState.Remove("oRole");
-    ModelState.Remove("Name");
-    ModelState.Remove("Surname");
-
-    if (!ModelState.IsValid)
-    {
-        return View();
-    }
-
-    try
-    {
-        // Recuperar el usuario existente de la base de datos
-        var existingUser = await _ristoranteContext.Users.FirstOrDefaultAsync(u => u.Email == model.Email);
-
-        // Verificar si el usuario existe
-        if (existingUser == null)
+        public async Task<IActionResult> Register(User model)
         {
-            // Retornar una vista de error o redirigir a una página de error
-            ViewData["Message"] = "El usuario no existe.";
-            return View("Error"); // Puedes crear una vista llamada "Error" para mostrar mensajes de error amigables
+            ModelState.Remove("oRole");
+            ModelState.Remove("Name");
+            ModelState.Remove("Surname");
+
+            if (!ModelState.IsValid)
+            {
+                return View();
+            }
+
+            try
+            {
+                // Recuperar el usuario existente de la base de datos
+                var existingUser = await _ristoranteContext.Users.FirstOrDefaultAsync(u => u.Email == model.Email);
+
+                // Verificar si el usuario existe
+                if (existingUser == null)
+                {
+                    ViewData["Message"] = "El usuario no existe.";
+                    return View("Error"); // Puedes crear una vista llamada "Error" para manejar este caso
+                }
+
+                // Actualizar los campos del usuario existente
+                existingUser.Status = model.Status;
+                existingUser.RoleId = model.RoleId;
+
+                // Verificar si la contraseña fue ingresada y realizar actualizaciones
+                if (!string.IsNullOrEmpty(model.Password))
+                {
+                    existingUser.Password = Utilities.EncryptKey(model.Password);
+                    existingUser.IsTemporaryPassword = false;
+
+                    // Guardar los cambios en la base de datos
+                    await _ristoranteContext.SaveChangesAsync();
+
+                    // Redirigir a Login con éxito
+                    return RedirectToAction("Login", "User", new { success = true });
+                }
+                else
+                {
+                    // Si no se ingresó una contraseña, mostrar un mensaje en la vista actual
+                    ViewData["Message"] = "Por favor, asegúrate de ingresar una nueva contraseña.";
+                    return View();
+                }
+            }
+            catch (Exception ex)
+            {
+                // Manejo de errores
+                _errorLoggingService.LogError("Se produjo un error al actualizar el usuario.", ex.ToString());
+                ViewData["Message"] = "Ocurrió un error al actualizar el usuario. Intenta nuevamente.";
+                return View("Error");
+            }
         }
 
-        // Actualizar el campo de Status y RoleId del usuario existente
-        existingUser.Status = model.Status;
-        existingUser.RoleId = model.RoleId;
 
-        // Verificar si el campo Password ha sido modificado antes de encriptar y actualizarlo
-        if (!string.IsNullOrEmpty(model.Password))
-        {
-            existingUser.Password = Utilities.EncryptKey(model.Password);
 
-            // Cambiar el estado de IsTemporaryPassword a false
-            existingUser.IsTemporaryPassword = false;
-        }
-
-        // Guardar los cambios en la base de datos
-        await _ristoranteContext.SaveChangesAsync();
-
-        TempData["RegisterSuccess"] = true;
-        return RedirectToAction(nameof(Register));
-    }
-    catch (Exception ex)
-    {
-        // Capturar y registrar el error usando el servicio
-        string errorMessage = "Se produjo un error al actualizar el usuario. Verifique nuevamente";
-        string exceptionMessage = ex.ToString();
-        _errorLoggingService.LogError(errorMessage, exceptionMessage);
-
-        // Redirigir a una página de error o mostrar un mensaje de error personalizado.
-        ViewData["Message"] = "Ocurrió un error al actualizar el usuario.";
-        return View("Error"); // Puedes crear una vista llamada "Error" para mostrar mensajes de error amigables
-    }
-}
 
 
 
