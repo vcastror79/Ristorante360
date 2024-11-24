@@ -117,22 +117,56 @@ namespace Ristorante360Admin.Controllers
                 //_ristoranteContext.Users.Add(oUserVM.oUser);
                 //}
 
-
-                if (oUserVM.oUser.UserId == 0)
+                if (oUserVM.oUser.UserId == 0) // Crear nuevo usuario
                 {
-                    // Encriptar la contraseña temporal
-                    string hashedPassword = Resources.Utilities.EncryptKey("contraseñaTemporal"); // Asegúrate de usar el mismo estándar que en Login
-                    oUserVM.oUser.Password = hashedPassword;
+                    // Verifica si hay un valor en la contraseña (de la vista)
+                    if (!string.IsNullOrEmpty(oUserVM.oUser.Password))
+                    {
+                        // Encripta la contraseña proporcionada desde la vista
+                        oUserVM.oUser.Password = Resources.Utilities.EncryptKey(oUserVM.oUser.Password);
+                    }
+                    else
+                    {
+                        // Si no se envió contraseña, usa un valor temporal predeterminado
+                        oUserVM.oUser.Password = Resources.Utilities.EncryptKey("contraseñaTemporal");
+                    }
 
                     // Configurar el estado del usuario
                     oUserVM.oUser.Status = true;
 
                     // Marcar la contraseña como temporal
-                    oUserVM.oUser.IsTemporaryPassword = true; // Aquí configuramos el nuevo campo
+                    oUserVM.oUser.IsTemporaryPassword = true;
 
                     // Agregar el usuario al contexto
                     _ristoranteContext.Users.Add(oUserVM.oUser);
                 }
+
+
+
+                if (oUserVM.oUser.UserId == 0) // Crear nuevo usuario
+                {
+                    // Verifica si hay un valor en la contraseña (de la vista)
+                    if (!string.IsNullOrEmpty(oUserVM.oUser.Password))
+                    {
+                        // Encripta la contraseña proporcionada desde la vista
+                        oUserVM.oUser.Password = Resources.Utilities.EncryptKey(oUserVM.oUser.Password);
+                    }
+                    else
+                    {
+                        // Si no se envió contraseña, usa un valor temporal predeterminado
+                        oUserVM.oUser.Password = Resources.Utilities.EncryptKey("contraseñaTemporal");
+                    }
+
+                    // Configurar el estado del usuario
+                    oUserVM.oUser.Status = true;
+
+                    // Marcar la contraseña como temporal
+                    oUserVM.oUser.IsTemporaryPassword = true;
+
+                    // Agregar el usuario al contexto
+                    _ristoranteContext.Users.Add(oUserVM.oUser);
+                }
+
 
 
 

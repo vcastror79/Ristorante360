@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Ristorante360Admin.Models;
 using System.Diagnostics;
-
+using Ristorante360Admin.Resources;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
 using System.Security.Claims;
@@ -60,6 +60,16 @@ namespace Ristorante360Admin.Controllers
                 return View("Error");
             }
         }
+
+        public IActionResult GenerateHash()
+        {
+            // Generar el hash de la contraseña "R1st0rante"
+            string hashedPassword = Utilities.EncryptKey("R1st0rante");
+
+            // Retorna el hash en pantalla para verificar
+            return Content($"Hash generado para 'R1st0rante': {hashedPassword}");
+        }
+
 
         public async Task<IActionResult> LogOff()
         {

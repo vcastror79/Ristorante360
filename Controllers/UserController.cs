@@ -53,18 +53,8 @@ namespace Ristorante360Admin.Controllers
                     return View();
                 }
 
-                var userNew = await _ristoranteContext.Users.FirstOrDefaultAsync(u => u.Email == user.Email && u.RoleId == 3);
-
-                if (userNew != null)
-                {
-                    var userJson = JsonConvert.SerializeObject(user);
-                    TempData["UserData"] = userJson;
-
-
-                    return RedirectToAction("Register", "User");
-                }
-
-                User user_found = await _userService.GetUser(user.Email, Utilities.EncryptKey(user.Password));
+                // Verificar si el usuario existe en la base de datos
+                var user_found = await _ristoranteContext.Users.FirstOrDefaultAsync(u => u.Email == user.Email);
 
                 if (user_found == null)
                 {
@@ -72,46 +62,51 @@ namespace Ristorante360Admin.Controllers
                     return View();
                 }
 
-               // if (!user_found.Status)
-               // {
-                 //   ViewData["Message"] = "Tu cuenta está desactivada. Por favor, contacta al administrador.";
-                 //   return View();
-              //  }
 
 
+
+
+                // Validar si la contraseña es correcta
+                string hashedPassword = Utilities.EncryptKey(user.Password);
+
+                if (user_found.Password != hashedPassword)
+                {
+                    ViewData["Message"] = "El usuario y/o contraseña son incorrectos.";
+                    return View();
+                }
+
+
+                // Validar si la contraseña es temporal
+                if (user_found.IsTemporaryPassword)
+                {
+                    // Serializar el usuario y redirigir a Register
+                    var userJson = JsonConvert.SerializeObject(new UserLoginVM
+                    {
+                        Email = user_found.Email,
+                        Password = user.Password
+                    });
+
+                    TempData["UserData"] = userJson;
+                    return RedirectToAction("Register", "User");
+                }
+
+                // Validar si la cuenta está activa
                 if (!user_found.Status)
                 {
                     ViewData["Message"] = "Tu cuenta está desactivada. Por favor, contacta al administrador.";
                     return View();
                 }
 
-                // Redirigir si la contraseña es temporal
-                if (user_found.Password == Utilities.EncryptKey("contraseñaTemporal")) // Ajusta este valor si tienes un estándar
-                {
-                    TempData["UserId"] = user_found.UserId; // Guarda temporalmente el ID del usuario
-                    return RedirectToAction("Recovery", "User"); // Redirige a la vista Recovery para cambiar la contraseña
-                }
-
-
-
-
-
-                string usuarioNombre = user_found.Name;
-                int usuarioRol = user_found.RoleId;
-                int usuarioId = user_found.UserId; // Asegúrate de que la clase User tenga la propiedad UserId
-
-                List<Claim> claims = new List<Claim>()
+                // Crear los claims para autenticar al usuario
+                List<Claim> claims = new List<Claim>
         {
             new Claim(ClaimTypes.Name, user_found.Name),
-            new Claim(ClaimTypes.Role, usuarioRol.ToString()),
-            new Claim(ClaimTypes.NameIdentifier, usuarioId.ToString())
+            new Claim(ClaimTypes.Role, user_found.RoleId.ToString()),
+            new Claim(ClaimTypes.NameIdentifier, user_found.UserId.ToString())
         };
 
                 ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-                AuthenticationProperties properties = new AuthenticationProperties()
-                {
-                    AllowRefresh = true
-                };
+                AuthenticationProperties properties = new AuthenticationProperties { AllowRefresh = true };
 
                 await HttpContext.SignInAsync(
                     CookieAuthenticationDefaults.AuthenticationScheme,
@@ -119,23 +114,18 @@ namespace Ristorante360Admin.Controllers
                     properties
                 );
 
-                HttpContext.Session.SetInt32("UserId", usuarioId);
-                HttpContext.Session.SetString("Username", usuarioNombre);
-                HttpContext.Session.SetInt32("Rol", usuarioRol);
-                _logService.Log($"Inicio de sesión del usuario", "User");
+                // Guardar información en la sesión
+                HttpContext.Session.SetInt32("UserId", user_found.UserId);
+                HttpContext.Session.SetString("Username", user_found.Name);
+                HttpContext.Session.SetInt32("Rol", user_found.RoleId);
 
+                _logService.Log($"Inicio de sesión del usuario {user_found.Email}", "User");
                 return RedirectToAction("Index", "Home");
-            }
-            catch (DbException dbEx)
-            {
-                _errorLoggingService.LogError("Error de base de datos durante el inicio de sesión", dbEx.Message);
-                ViewData["Message"] = "Hubo un error de base de datos al intentar iniciar sesión.";
-                return View();
             }
             catch (Exception ex)
             {
                 _errorLoggingService.LogError("Error durante el inicio de sesión", ex.Message);
-                ViewData["Message"] = "Se produjo un error al obtener los datos del usuario.";
+                ViewData["Message"] = "Se produjo un error al procesar el inicio de sesión.";
                 return View();
             }
         }
@@ -143,82 +133,94 @@ namespace Ristorante360Admin.Controllers
 
         public IActionResult Register()
         {
-            // Recupera la cadena JSON del usuario de TempData
+            // Validar si TempData contiene datos
             var userJson = TempData["UserData"] as string;
 
             if (!string.IsNullOrEmpty(userJson))
             {
-                // Deserializa la cadena JSON en un objeto UserLoginVM
-                var user = JsonConvert.DeserializeObject<UserLoginVM>(userJson);
-
-                string userEmail = user.Email;
-
-                var userViewModel = new UserNewVM
+                try
                 {
-                    Email = userEmail
-                };
+                    // Deserializar el JSON en un objeto UserLoginVM
+                    var user = JsonConvert.DeserializeObject<UserLoginVM>(userJson);
 
-                return View(userViewModel);
+                    var userViewModel = new UserNewVM
+                    {
+                        Email = user.Email
+                    };
+
+                    return View(userViewModel);
+                }
+                catch (Exception ex)
+                {
+                    // Manejar posibles errores de deserialización
+                    _errorLoggingService.LogError("Error al deserializar datos del usuario en Register", ex.Message);
+                }
             }
 
-            // Manejo de error si la cadena JSON no se encuentra en TempData
+            // Redirigir al login si no hay datos válidos en TempData
             return RedirectToAction("Login");
         }
 
 
         [HttpPost]
-        public async Task<IActionResult> Register(User model)
+public async Task<IActionResult> Register(User model)
+{
+    ModelState.Remove("oRole");
+    ModelState.Remove("Name");
+    ModelState.Remove("Surname");
+
+    if (!ModelState.IsValid)
+    {
+        return View();
+    }
+
+    try
+    {
+        // Recuperar el usuario existente de la base de datos
+        var existingUser = await _ristoranteContext.Users.FirstOrDefaultAsync(u => u.Email == model.Email);
+
+        // Verificar si el usuario existe
+        if (existingUser == null)
         {
-            ModelState.Remove("oRole");
-            ModelState.Remove("Name");
-            ModelState.Remove("Surname");
-
-            if (!ModelState.IsValid)
-            {
-                return View();
-            }
-
-            try
-            {
-                // Recuperar el usuario existente de la base de datos
-                var existingUser = await _ristoranteContext.Users.FirstOrDefaultAsync(u => u.Email == model.Email);
-
-                // Verificar si el usuario existe
-                if (existingUser == null)
-                {
-                    // Retornar una vista de error o redirigir a una página de error
-                    ViewData["Message"] = "El usuario no existe.";
-                    return View("Error"); // Puedes crear una vista llamada "Error" para mostrar mensajes de error amigables
-                }
-
-                // Actualizar el campo de Status y RoleId del usuario existente
-                existingUser.Status = model.Status;
-                existingUser.RoleId = model.RoleId;
-
-                // Verificar si el campo Password ha sido modificado antes de encriptar y actualizarlo
-                if (!string.IsNullOrEmpty(model.Password))
-                {
-                    existingUser.Password = Utilities.EncryptKey(model.Password);
-                }
-
-                // Guardar los cambios en la base de datos
-                await _ristoranteContext.SaveChangesAsync();
-
-                TempData["RegisterSuccess"] = true;
-                return RedirectToAction(nameof(Register));
-            }
-            catch (Exception ex)
-            {
-                // Capturar y registrar el error usando el servicio
-                string errorMessage = "Se produjo un error al actualizar el usuario. Verifique nuevamente";
-                string exceptionMessage = ex.ToString();
-                _errorLoggingService.LogError(errorMessage, exceptionMessage);
-
-                // Redirigir a una página de error o mostrar un mensaje de error personalizado.
-                ViewData["Message"] = "Ocurrió un error al actualizar el usuario.";
-                return View("Error"); // Puedes crear una vista llamada "Error" para mostrar mensajes de error amigables
-            }
+            // Retornar una vista de error o redirigir a una página de error
+            ViewData["Message"] = "El usuario no existe.";
+            return View("Error"); // Puedes crear una vista llamada "Error" para mostrar mensajes de error amigables
         }
+
+        // Actualizar el campo de Status y RoleId del usuario existente
+        existingUser.Status = model.Status;
+        existingUser.RoleId = model.RoleId;
+
+        // Verificar si el campo Password ha sido modificado antes de encriptar y actualizarlo
+        if (!string.IsNullOrEmpty(model.Password))
+        {
+            existingUser.Password = Utilities.EncryptKey(model.Password);
+
+            // Cambiar el estado de IsTemporaryPassword a false
+            existingUser.IsTemporaryPassword = false;
+        }
+
+        // Guardar los cambios en la base de datos
+        await _ristoranteContext.SaveChangesAsync();
+
+        TempData["RegisterSuccess"] = true;
+        return RedirectToAction(nameof(Register));
+    }
+    catch (Exception ex)
+    {
+        // Capturar y registrar el error usando el servicio
+        string errorMessage = "Se produjo un error al actualizar el usuario. Verifique nuevamente";
+        string exceptionMessage = ex.ToString();
+        _errorLoggingService.LogError(errorMessage, exceptionMessage);
+
+        // Redirigir a una página de error o mostrar un mensaje de error personalizado.
+        ViewData["Message"] = "Ocurrió un error al actualizar el usuario.";
+        return View("Error"); // Puedes crear una vista llamada "Error" para mostrar mensajes de error amigables
+    }
+}
+
+
+
 
 
         public IActionResult RegisterUser()
@@ -413,7 +415,5 @@ namespace Ristorante360Admin.Controllers
                 return RedirectToAction("Login", "User");
             }
         }
-
-
     }
 }

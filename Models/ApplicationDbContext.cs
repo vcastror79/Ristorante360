@@ -183,7 +183,15 @@ public partial class ApplicationDbContext : DbContext
             // Permitir que los campos acepten valores nulos
             entity.Property(e => e.OrderTypeId).HasColumnName("Order_Type_Id").IsRequired(false);
             entity.Property(e => e.PaymentMethodId).HasColumnName("Payment_Method_Id").IsRequired(false);
-            entity.Property(e => e.TotalAmount).HasColumnName("Total_Amount").IsRequired(false);
+            //entity.Property(e => e.TotalAmount).HasColumnName("Total_Amount").IsRequired(false);
+
+            entity.Property(e => e.TotalAmount).HasColumnName("Total_Amount").HasPrecision(18, 2).IsRequired(false);// Definir precisión de 18 dígitos, con 2 decimales
+
+
+
+
+
+
             entity.Property(e => e.ClientId).HasColumnName("Client_Id").IsRequired(false); ;
             entity.Property(e => e.OrderSpecifications).HasColumnName("Order_Specifications").IsRequired(false); ;
 
