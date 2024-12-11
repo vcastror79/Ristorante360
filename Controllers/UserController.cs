@@ -64,14 +64,14 @@ namespace Ristorante360Admin.Controllers
 
 
 
-                // Validar si la contraseña es correcta
-               // string hashedPassword = Utilities.EncryptKey(user.Password);
+                 //Validar si la contraseña es correcta
+                string hashedPassword = Utilities.EncryptKey(user.Password);
 
-               // if (user_found.Password != hashedPassword)
-             //   {
-              //      ViewData["Message"] = "El usuario y/o contraseña son incorrectos.";
-             //       return View();
-             //   }
+                if (user_found.Password != hashedPassword)
+                {
+                    ViewData["Message"] = "El usuario y/o contraseña son incorrectos.";
+                    return View();
+                }
 
 
                 // Validar si la contraseña es temporal

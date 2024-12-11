@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -1883,7 +1883,7 @@
     <None Include="wwwroot\images\svg\ic_stat3.svg" />
     <None Include="wwwroot\js\custom.min.js" />
     <None Include="wwwroot\js\CustomScripts\addProductoMd.js" />
-    <None Include="wwwroot\js\CustomScripts\alertChante.js" />
+	<None Include="wwwroot\js\CustomScripts\alertChante.js" />
     <None Include="wwwroot\js\CustomScripts\ClientesCtrl.js" />
     <None Include="wwwroot\js\CustomScripts\consultCategory.js" />
     <None Include="wwwroot\js\CustomScripts\imagesUpload.js" />

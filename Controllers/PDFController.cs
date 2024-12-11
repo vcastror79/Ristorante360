@@ -66,7 +66,7 @@ namespace Ristorante_360_Admin.Controllers
             title.Alignment = Element.ALIGN_CENTER;
 
             // Ruta de la imagen
-            string imagePath = Path.Combine(_hostingEnvironment.WebRootPath, "images", "logoChanteCircular.png");
+            string imagePath = Path.Combine(_hostingEnvironment.WebRootPath, "images", "logoR360Circular_256x256");
 
             // Crear una instancia de la clase Image y cargar la imagen desde la ruta
             iTextSharp.text.Image image = iTextSharp.text.Image.GetInstance(Path.Combine(_hostingEnvironment.WebRootPath, "images", "logoR360Circular_256x256.png"));
